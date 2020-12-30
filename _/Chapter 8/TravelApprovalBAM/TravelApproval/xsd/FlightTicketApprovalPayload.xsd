@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<schema targetNamespace="http://xmlns.oracle.com/bpel/workflow/task" xmlns:tns="http://xmlns.oracle.com/bpel/workflow/task" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns0="http://packtpub.com/service/employee/" xmlns:ns1="http://packtpub.com/service/airline/">
+   <import namespace="http://packtpub.com/service/employee/" schemaLocation="EmployeeType.xsd"/>
+   <import namespace="http://packtpub.com/service/airline/" schemaLocation="AirlineTypes.xsd"/>
+   <complexType name="FlightTicketApprovalPayloadType">
+      <sequence>
+         <element ref="ns0:employee"/>
+         <element ref="ns1:confirmationData"/>
+      </sequence>
+   </complexType>
+</schema>

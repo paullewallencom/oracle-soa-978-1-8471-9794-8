@@ -1,0 +1,374 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Fri Jun 04 14:21:44 CEST 2010
+  Author:  SOA11g
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="TravelApproval"
+               targetNamespace="http://packtpub.com/bpel/travel/"
+               xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+               xmlns:client="http://packtpub.com/bpel/travel/"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+               xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://packtpub.com/service/airline/"
+         xmlns:ns2="http://packtpub.com/service/employee/"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction"
+         xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:med="http://schemas.oracle.com/mediator/xpath"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:bpmn="http://schemas.oracle.com/bpm/xpath"
+         xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns3="http://xmlns.oracle.com/ias/pcbpel/NotificationService"
+         xmlns:ns4="http://packtpub.com/bpel/travel/reservation">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="client" partnerLinkType="client:travelLT" myRole="travelService" partnerRole="travelServiceCustomer"/>
+    <partnerLink name="EmployeeTravelStatus"
+                 partnerRole="employeeTravelStatusService"
+                 partnerLinkType="ns2:employeeLT"/>
+    <partnerLink myRole="airlineCustomer" name="AmericanAirlines"
+                 partnerRole="airlineService" partnerLinkType="ns1:flightLT"/>
+    <partnerLink myRole="airlineCustomer" name="DeltaAirlines"
+                 partnerRole="airlineService" partnerLinkType="ns1:flightLT"/>
+    <partnerLink name="NotificationService_1"
+                 partnerLinkType="ns3:NotificationServiceLink"
+                 partnerRole="NotificationServiceProvider"/>
+    <partnerLink name="TicketReservationDetail.ticketreservationdetail_client"
+                 partnerRole="TicketReservationDetailProvider"
+                 partnerLinkType="ns4:TicketReservationDetail"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="TravelRequest" messageType="client:TravelRequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="TravelResponse"
+              messageType="ns1:ReservationResponseMessage"/>
+   
+    <variable name="EmployeeTravelStatusResponse"
+              messageType="ns2:EmployeeTravelStatusResponseMessage"/>
+    <variable name="FlightDetails"
+              messageType="ns1:FlightTicketRequestMessage"/>
+    <variable name="FlightResponseAA" messageType="ns1:TravelResponseMessage"/>
+    <variable name="FlightResponseDA" messageType="ns1:TravelResponseMessage"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in TravelApproval.wsdl) -->
+    <receive name="receiveTravelRequest" partnerLink="client" portType="client:TravelApprovalPT" operation="TravelApproval"
+             variable="TravelRequest" createInstance="yes"/>
+
+    <!-- Generate reply to synchronous request -->
+    <scope name="Scope_1">
+      <bpelx:annotation>
+        <bpelx:general>
+          <bpelx:property name="userLabel">RetrieveEmployeeTravelStatus</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>
+      <variables>
+         <variable name="EmployeeTravelStatusRequest"
+              messageType="ns2:EmployeeTravelStatusRequestMessage"/>
+      </variables>
+      <sequence>
+        <assign name="AssignEmployee">
+          <copy>
+            <from variable="TravelRequest" part="travelRequest"
+                  query="/client:TravelApproval/employee"/>
+            <to variable="EmployeeTravelStatusRequest" part="employee"
+                query="/ns2:employee"/>
+          </copy>
+        </assign>
+        <invoke name="EmployeeTravelStatus"
+                inputVariable="EmployeeTravelStatusRequest"
+                outputVariable="EmployeeTravelStatusResponse"
+                partnerLink="EmployeeTravelStatus"
+                portType="ns2:EmployeeTravelStatusPT"
+                operation="EmployeeTravelStatus"/>
+        <assign name="AssignFlightDetails">
+          <copy>
+            <from variable="TravelRequest" part="travelRequest"
+                  query="/client:TravelApproval/flightData"/>
+            <to variable="FlightDetails" part="flightTicketRequest"
+                query="/ns1:flightTicketRequest/ns1:flightData"/>
+          </copy>
+          <copy>
+            <from variable="EmployeeTravelStatusResponse" part="travelClass"
+                  query="/ns2:travelClass"/>
+            <to variable="FlightDetails" part="flightTicketRequest"
+                query="/ns1:flightTicketRequest/ns1:travelClass"/>
+          </copy>
+        </assign>
+      </sequence>
+    </scope>
+    <scope name="Scope_2">
+      <bpelx:annotation>
+        <bpelx:general>
+          <bpelx:property name="userLabel">CheckFlightAvailability</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>
+      <flow>
+        <sequence name="Sequence_1">
+          <invoke name="DeltaAirlines" inputVariable="FlightDetails"
+                  partnerLink="DeltaAirlines"
+                  portType="ns1:FlightAvailabilityPT"
+                  operation="FlightAvailability"/>
+          <receive name="DeltaAirlines" createInstance="no"
+                   variable="FlightResponseDA" partnerLink="DeltaAirlines"
+                   portType="ns1:FlightCallbackPT"
+                   operation="FlightTicketCallback"/>
+        </sequence>
+        <sequence name="Sequence_1">
+          <invoke name="AmericanAirlines" inputVariable="FlightDetails"
+                  partnerLink="AmericanAirlines"
+                  portType="ns1:FlightAvailabilityPT"
+                  operation="FlightAvailability"/>
+          <receive name="AmericanAirlines" createInstance="no"
+                   variable="FlightResponseAA" partnerLink="AmericanAirlines"
+                   portType="ns1:FlightCallbackPT"
+                   operation="FlightTicketCallback"/>
+        </sequence>
+      </flow>
+    </scope>
+    <!--
+    <scope name="Scope_3">
+      <bpelx:annotation>
+        <bpelx:general>
+          <bpelx:property name="userLabel">SelectAirline</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>
+      <switch name="Switch_1">
+        <case condition="number(bpws:getVariableData('FlightResponseAA','confirmationData','/ns1:confirmationData/Price')) &lt;= number(bpws:getVariableData('FlightResponseDA','confirmationData','/ns1:confirmationData/Price'))">
+          <bpelx:annotation>
+            <bpelx:general>
+              <bpelx:property name="userLabel">AA is cheaper</bpelx:property>
+            </bpelx:general>
+          </bpelx:annotation>
+          <sequence>
+            <invoke name="AmericanAirlinesReservation"
+                    inputVariable="FlightResponseAA"
+                    partnerLink="AmericanAirlines"
+                    portType="ns1:FlightAvailabilityPT"
+                    operation="MakeReservation"/>
+            <receive name="AmericanAirlinesReservation" createInstance="no"
+                     variable="TravelResponse" partnerLink="AmericanAirlines"
+                     portType="ns1:FlightCallbackPT"
+                     operation="MakeReservationCallback"/>
+          </sequence>
+        </case>
+        <otherwise>
+          <sequence>
+            <invoke name="DeltaAirlinesReservation"
+                    inputVariable="FlightResponseDA"
+                    partnerLink="DeltaAirlines"
+                    portType="ns1:FlightAvailabilityPT"
+                    operation="MakeReservation"/>
+            <receive name="DeltaAirlinesReservation" createInstance="no"
+                     variable="TravelResponse" partnerLink="DeltaAirlines"
+                     portType="ns1:FlightCallbackPT"
+                     operation="MakeReservationCallback"/>
+          </sequence>
+        </otherwise>
+      </switch>
+    </scope>
+    -->
+    <scope name="Scope_3">
+      <bpelx:annotation>
+        <bpelx:general>
+          <bpelx:property name="userLabel">MakeReservation</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>
+      <variables>
+        <variable name="ReservationDataInput"
+                  messageType="ns4:TicketReservationDetailRequestMessage"/>
+      </variables>
+      <sequence name="Sequence_3">
+        <switch name="Switch_1">
+          <case condition="number(bpws:getVariableData('FlightResponseAA','confirmationData','/ns1:confirmationData/Price'))&lt;=number(bpws:getVariableData('FlightResponseDA','confirmationData','/ns1:confirmationData/Price'))">
+            <bpelx:annotation>
+              <bpelx:general>
+                <bpelx:property name="userLabel">AmericanAirlines</bpelx:property>
+              </bpelx:general>
+            </bpelx:annotation>
+            <sequence>
+              <assign name="AssignReservationData">
+                <copy>
+                  <from expression='string("American")'/>
+                  <to variable="ReservationDataInput" part="payload"
+                      query="/ns4:flightReservation/ns4:airline"/>
+                </copy>
+                <copy>
+                  <from variable="FlightResponseAA" part="confirmationData"
+                        query="/ns1:confirmationData"/>
+                  <to variable="ReservationDataInput" part="payload"
+                      query="/ns4:flightReservation/ns4:confirmationData"/>
+                </copy>
+              </assign>
+              <assign name="AssignTravelResponse">
+                <copy>
+                  <from variable="FlightResponseAA" part="confirmationData"
+                        query="/ns1:confirmationData/FlightNo"/>
+                  <to variable="TravelResponse" part="reservationData"
+                      query="/ns1:reservationData/FlightNo"/>
+                </copy>
+                <copy>
+                  <from variable="FlightResponseAA" part="confirmationData"
+                        query="/ns1:confirmationData/Approved"/>
+                  <to variable="TravelResponse" part="reservationData"
+                      query="/ns1:reservationData/Confirmed"/>
+                </copy>
+              </assign>
+            </sequence>
+          </case>
+          <otherwise>
+            <sequence>
+              <assign name="AssignReservationData">
+                <copy>
+                  <from expression='string("Delta")'/>
+                  <to variable="ReservationDataInput" part="payload"
+                      query="/ns4:flightReservation/ns4:airline"/>
+                </copy>
+                <copy>
+                  <from variable="FlightResponseDA" part="confirmationData"
+                        query="/ns1:confirmationData"/>
+                  <to variable="ReservationDataInput" part="payload"
+                      query="/ns4:flightReservation/ns4:confirmationData"/>
+                </copy>
+              </assign>
+              <assign name="AssignTravelResponse">
+                <copy>
+                  <from variable="FlightResponseDA" part="confirmationData"
+                        query="/ns1:confirmationData/FlightNo"/>
+                  <to variable="TravelResponse" part="reservationData"
+                      query="/ns1:reservationData/FlightNo"/>
+                </copy>
+                <copy>
+                  <from variable="FlightResponseDA" part="confirmationData"
+                        query="/ns1:confirmationData/Approved"/>
+                  <to variable="TravelResponse" part="reservationData"
+                      query="/ns1:reservationData/Confirmed"/>
+                </copy>
+              </assign>
+            </sequence>
+          </otherwise>
+        </switch>
+        <bpelx:signal name="StartDetailProcess" label="makeReservationDetail"
+                      to="details"/>
+        <invoke name="InvokeDetailProcess"
+                inputVariable="ReservationDataInput"
+                partnerLink="TicketReservationDetail.ticketreservationdetail_client"
+                portType="ns4:TicketReservationDetail" operation="process"
+                bpelx:invokeAsDetail="true"/>
+      </sequence>
+    </scope>
+    <bpelx:receiveSignal name="ReceiveSignalFromDetail"
+                         label="reservationCompleted" from="details"/>
+    <scope name="NotificationService">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:email"></bpelx:pattern>
+        <bpelx:general>
+          <bpelx:property name="userLabel">NotificationService</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>
+      <variables>
+        <variable name="varNotificationReq"
+                  messageType="ns3:EmailNotificationRequest"/>
+        <variable name="varNotificationResponse"
+                  messageType="ns3:ArrayOfResponse"/>
+        <variable name="NotificationServiceFaultVariable"
+                  messageType="ns3:NotificationServiceErrorMessage"/>
+      </variables>
+      <sequence name="Sequence_2">
+        <assign name="EmailParamsAssign">
+          <copy>
+            <from expression="string('Default')"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:FromAccountName"/>
+          </copy>
+          <copy>
+            <from expression="string('')"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:Bcc"/>
+          </copy>
+          <copy>
+            <from expression="string('')"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:Cc"/>
+          </copy>
+          <copy>
+            <from expression="string('')"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:ReplyToAddress"/>
+          </copy>
+          <copy>
+            <from expression="concat('Travel Confirmation for the requested flight: ', bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/flightData/RequestNo'))"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:Subject"/>
+          </copy>
+          <copy>
+            <from expression="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/mail/client:Address')"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:To"/>
+          </copy>
+          <copy>
+            <from expression="concat(string('Your requested flight to '), bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/flightData/DestinationTo'), string(' has been confirmed.'))"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:Content/ns3:ContentBody"/>
+          </copy>
+          <copy>
+            <from expression="string('text/html; charset=UTF-8')"/>
+            <to variable="varNotificationReq" part="EmailPayload"
+                query="/EmailPayload/ns3:Content/ns3:MimeType"/>
+          </copy>
+        </assign>
+        <invoke name="InvokeNotificationService"
+                portType="ns3:NotificationService"
+                partnerLink="NotificationService_1"
+                inputVariable="varNotificationReq"
+                outputVariable="varNotificationResponse"
+                operation="sendEmailNotification"/>
+      </sequence>
+    </scope>
+    <invoke name="clientCallBack" inputVariable="TravelResponse"
+            partnerLink="client" portType="client:ClientCallbackPT"
+            operation="ClientCallback"/>
+  </sequence>
+</process>

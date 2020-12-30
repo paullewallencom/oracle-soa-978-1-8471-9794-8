@@ -1,0 +1,46 @@
+<definitions
+    
+     targetNamespace="http://packtpub.com/service/employee/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://packtpub.com/service/employee/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    >
+    <types>
+        <xsd:schema targetNamespace="http://packtpub.com/service/employee/types" elementFormDefault="qualified"/>
+        <xsd:schema>
+            <xsd:import schemaLocation="EmployeeTravelStatusTypes.xsd" namespace="http://packtpub.com/service/employee/"/>
+        </xsd:schema>
+    </types>
+    <message name="EmployeeTravelStatusRequestMessage">
+        <part name="employee" element="tns:employee"/>
+    </message>
+    <message name="EmployeeTravelStatusResponseMessage">
+        <part name="travelClass" element="tns:travelClass"/>
+    </message>
+    <portType name="EmployeeTravelStatusPT">
+        <operation name="EmployeeTravelStatus">
+            <input message="tns:EmployeeTravelStatusRequestMessage"/>
+            <output message="tns:EmployeeTravelStatusResponseMessage"/>
+        </operation>
+    </portType>
+    <binding name="EmployeeTravelStatusBinding" type="tns:EmployeeTravelStatusPT">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="EmployeeTravelStatus">
+            <soap:operation style="document" soapAction="http://packtpub.com/service/employee//EmployeeTravelStatus"/>
+            <input>
+                <soap:body use="literal" parts="employee"/>
+            </input>
+            <output>
+                <soap:body use="literal" parts="travelClass"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="EmployeeTravelStatusService-v2">
+        <port name="EmployeeTravelStatusPTPort" binding="tns:EmployeeTravelStatusBinding">
+            <soap:address location="http://localhost:7101/TravelApprovalOSB-EmployeeTravelStatus-v2-context-root/EmployeeTravelStatusPTImplService"/>
+        </port>
+    </service>
+</definitions>

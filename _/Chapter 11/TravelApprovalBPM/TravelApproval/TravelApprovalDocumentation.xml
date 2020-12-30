@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?oracleBPM version="11.1.1" fileRevision="20100225"?>
+<processDocumentation xmlns="http://xmlns.oracle.com/bpm/taskMetadataService/processDocumentation">
+    <component name="TravelApproval">
+        <topicDocumentations>
+            <topicDocumentation name="TravelApproval">
+                <labels>
+                    <label locale="en">TravelApproval</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="startEvent0">
+                <labels>
+                    <label locale="en">Retrieve travel request</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="endEvent0">
+                <labels>
+                    <label locale="en">End</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="activity0">
+                <labels>
+                    <label locale="en">Retrieve employee travel class</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="activity1">
+                <labels>
+                    <label locale="en">Retrieve offers</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="activity2">
+                <labels>
+                    <label locale="en">Retrieve offers callback</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="activity3">
+                <labels>
+                    <label locale="en">Flight ticket approval</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="gateway0">
+                <labels>
+                    <label locale="en">Task outcome?</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="activity4">
+                <labels>
+                    <label locale="en">Make  reservation</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="activity5">
+                <labels>
+                    <label locale="en">Make reservation callback</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="gateway1">
+                <labels>
+                    <label locale="en">Merge</label>
+                </labels>
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="sf40"/>
+            <topicDocumentation name="sf42"/>
+            <topicDocumentation name="sf44"/>
+            <topicDocumentation name="sf46"/>
+            <topicDocumentation name="sf48"/>
+            <topicDocumentation name="sf50"/>
+            <topicDocumentation name="sf53">
+                <descriptions>
+                    <description locale="en"></description>
+                </descriptions>
+            </topicDocumentation>
+            <topicDocumentation name="sf56"/>
+            <topicDocumentation name="sf59"/>
+            <topicDocumentation name="sf62"/>
+        </topicDocumentations>
+    </component>
+</processDocumentation>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://packtpub.com/bpel/travel/" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://packtpub.com/bpel/travel/">
+	<wsdl:import namespace="http://packtpub.com/bpel/travel/" location="TravelApproval.wsdl"/>
+	
+	
+	<plnk:partnerLinkType name="travelLT">
+		<plnk:role name="travelService">
+			<plnk:portType name="tns:TravelApprovalPT"/>
+		</plnk:role>
+		<plnk:role name="travelServiceCustomer">
+		  <plnk:portType name="tns:ClientCallbackPT" />
+	    </plnk:role>
+	</plnk:partnerLinkType>
+	
+	
+</wsdl:definitions>

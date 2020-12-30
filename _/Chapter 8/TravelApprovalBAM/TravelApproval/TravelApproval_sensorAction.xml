@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<actions targetNamespace="http://packtpub.com/bpel/travel/" xmlns="http://xmlns.oracle.com/bpel/sensor" xmlns:tns="http://packtpub.com/bpel/travel/" xmlns:pc="http://xmlns.oracle.com/bpel/sensor">
+   <action name="AAReservationSensorAction" publishName="OracleBam" publishType="BAM" enabled="true" filter="">
+      <property name="bamTransform">bam/SensorAction_11.xsl</property>
+      <property name="jcaFileName">bam/AAReservationSensorAction.jcabam</property>
+      <sensorName>AAReservationSensor</sensorName>
+   </action>
+</actions>

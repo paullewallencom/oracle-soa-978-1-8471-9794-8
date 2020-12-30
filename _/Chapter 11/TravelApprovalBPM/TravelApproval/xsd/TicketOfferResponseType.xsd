@@ -1,0 +1,13 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://packtpub.com/bpel/ticketoffer/"
+     targetNamespace="http://packtpub.com/bpel/ticketoffer/" xmlns:bons0="http://packtpub.com/service/airline/"
+     elementFormDefault="qualified">
+    <xsd:import namespace="http://packtpub.com/service/airline/" schemaLocation="FlightConfirmationType.xsd"/>
+    <xsd:element name="FlightTicketResponse" type="FlightTicketResponseType"/>
+    <xsd:complexType name="FlightTicketResponseType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="flightData" type="bons0:FlightConfirmationType"/>
+            <xsd:element minOccurs="0" name="airline" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

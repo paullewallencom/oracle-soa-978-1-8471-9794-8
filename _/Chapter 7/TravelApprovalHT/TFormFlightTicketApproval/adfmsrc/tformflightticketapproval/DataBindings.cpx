@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://xmlns.oracle.com/adfm/application"
+             version="11.1.1.56.60" id="DataBindings" SeparateXMLFiles="false"
+             Package="tformflightticketapproval" ClientType="Generic">
+  <pageMap>
+    <page path="/taskDetails1.jspx"
+          usageId="tformflightticketapproval_taskDetails1PageDef"/>
+  </pageMap>
+  <pageDefinitionUsages>
+    <page id="tformflightticketapproval_taskDetails1PageDef"
+          path="tformflightticketapproval.pageDefs.taskDetails1PageDef"/>
+  </pageDefinitionUsages>
+  <dataControlUsages>
+    <dc id="TFormFlightTicketApproval_FlightTicketApproval"
+        path="tformflightticketapproval.TFormFlightTicketApproval_FlightTicketApproval"/>
+  </dataControlUsages>
+</Application>

@@ -1,0 +1,30 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="TicketReservationDetail"
+     targetNamespace="http://packtpub.com/bpel/travel/reservation"
+     xmlns:ns2="http://packtpub.com/service/airline/"
+     xmlns:ns1="http://packtpub.com/bpel/travel/reservation"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:client="http://packtpub.com/bpel/travel/reservation"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+    <plnk:partnerLinkType name="TicketReservationDetail">
+        <plnk:role name="TicketReservationDetailProvider">
+            <plnk:portType name="client:TicketReservationDetail"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:import namespace="http://packtpub.com/service/airline/" location="http://localhost:8001/soa-infra/services/default/AmericanAirlines/Airline.wsdl"/>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://packtpub.com/bpel/travel/reservation" schemaLocation="xsd/FlightReservationRequestType.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="TicketReservationDetailRequestMessage">
+        <wsdl:part name="payload" element="ns1:flightReservation"/>
+    </wsdl:message>
+    <wsdl:portType name="TicketReservationDetail">
+        <wsdl:operation name="process">
+            <wsdl:input message="ns1:TicketReservationDetailRequestMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

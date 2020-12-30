@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<faultPolicies xmlns="http://schemas.oracle.com/bpel/faultpolicy">
+  <faultPolicy version="2.0.1" id="TravelApprovalFaults"
+               xmlns:env="http://schemas.xmlsoap.org/ soap/envelope/"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns="http://schemas.oracle.com/bpel/faultpolicy"
+               xmlns:xsi="http://www.w3.org/2001/ XMLSchema-instance">
+    <Conditions>
+      <faultName xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+                 name="bpelx:remoteFault">
+        <condition>
+          <action ref="ora-human-intervention"/>
+        </condition>
+      </faultName>   
+    </Conditions>
+    <Actions>   
+      <Action id="my-java-handler">
+        <javaAction className="soatraining.faulthandling. MyFaultHandler"
+                    defaultAction="ora-terminate" propertySet="myProps">
+          <returnValue value="OK" ref="ora-rethrow-fault"/>
+        </javaAction>
+      </Action>
+      <!-- Retry -->
+      <Action id="ora-retry">
+        <retry>
+          <retryCount>4</retryCount>
+          <retryInterval>2</retryInterval>
+          <exponentialBackoff/>
+        </retry>
+      </Action>
+      <!-- Rethrow action -->
+      <Action id="ora-rethrow-fault">
+        <rethrowFault/>
+      </Action>
+      <!-- Human Intervention -->
+      <Action id="ora-human-intervention">
+        <humanIntervention/>
+      </Action>
+      <!-- Terminate -->
+      <Action id="ora-terminate">
+        <abort/>
+      </Action>
+    </Actions>    
+    <Properties>
+      <propertySet name="myProps">
+        <property name="logFileName">myfaulthandler.log</property>
+        <property name="logFileDir">c:\temp</property>
+      </propertySet>    
+    </Properties>
+  </faultPolicy>
+</faultPolicies>

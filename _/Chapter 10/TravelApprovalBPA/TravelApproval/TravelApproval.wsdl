@@ -1,0 +1,47 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="TravelApproval"
+     targetNamespace="http://xmlns.oracle.com/TravelApproval"
+     xmlns:ns2="http://packtpub.com/service/airline/"
+     xmlns:ns1="http://packtpub.com/bpel/travel/"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:client="http://xmlns.oracle.com/TravelApproval"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+    <plnk:partnerLinkType name="TravelApproval">
+        <plnk:role name="TravelApprovalProvider">
+            <plnk:portType name="client:TravelApproval"/>
+        </plnk:role>
+        <plnk:role name="TravelApprovalRequester">
+            <plnk:portType name="client:TravelApprovalCallback"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:import namespace="http://packtpub.com/service/airline/" location="http://localhost:8001/soa-infra/services/default/DeltaAirlines/Airline.wsdl"/>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://xmlns.oracle.com/TravelApproval" schemaLocation="xsd/TravelApproval.xsd"/>
+        </schema>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://packtpub.com/bpel/travel/" schemaLocation="xsd/TravelRequestType.xsd"/>
+        </xsd:schema>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://packtpub.com/service/airline/" schemaLocation="xsd/FlightReservationType.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="TravelApprovalResponseMessage">
+        <wsdl:part name="payload" element="ns2:reservationData"/>
+    </wsdl:message>
+    <wsdl:message name="TravelApprovalRequestMessage">
+        <wsdl:part name="payload" element="ns1:TravelApproval"/>
+    </wsdl:message>
+    <wsdl:portType name="TravelApprovalCallback">
+        <wsdl:operation name="processResponse">
+            <wsdl:input message="client:TravelApprovalResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="TravelApproval">
+        <wsdl:operation name="process">
+            <wsdl:input message="client:TravelApprovalRequestMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

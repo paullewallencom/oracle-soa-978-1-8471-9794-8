@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<DataControlConfigs xmlns="http://xmlns.oracle.com/adfm/configuration"
+                    version="11.1.1.56.60" id="DataControls"
+                    Package="tformflightticketapproval">
+  <AdapterDataControl id="TFormFlightTicketApproval_FlightTicketApproval"
+                      FactoryClass="oracle.adf.model.adapter.DataControlFactoryImpl"
+                      ImplDef="oracle.bpel.services.datacontrol.XSDDataControlDefinition"
+                      SupportsTransactions="true" SupportsSortCollection="false"
+                      SupportsResetState="false" SupportsRangesize="false"
+                      SupportsFindMode="false" SupportsUpdates="false"
+                      Definition="TFormFlightTicketApproval_FlightTicketApproval"
+                      BeanClass="TFormFlightTicketApproval_FlightTicketApproval"
+                      xmlns="http://xmlns.oracle.com/adfm/datacontrol">
+    <Source>
+      <XSDDataControl xmlns="http://xmlns.oracle.com/bpel/workflow/task"
+                      SchemaLocation="file:/C:/JDeveloper/mywork/TravelApprovalHT/TravelApproval/xsd/FlightTicketApprovalWorkflowTask.xsd"
+                      RootElement="task"
+                      rootelementnamespace="http://xmlns.oracle.com/bpel/workflow/task"
+                      taskLoc="file:/C:/JDeveloper/mywork/TravelApprovalHT/TravelApproval/FlightTicketApproval.task"
+                      InitiationTask="false"
+                      DocumentStoreConfiguration="false"/>
+    </Source>
+  </AdapterDataControl>
+</DataControlConfigs>

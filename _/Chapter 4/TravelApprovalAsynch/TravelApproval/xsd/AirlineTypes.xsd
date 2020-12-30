@@ -1,0 +1,17 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xs:schema xmlns:tns="http://packtpub.com/service/airline/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns:emp="http://packtpub.com/service/employee/" targetNamespace="http://packtpub.com/service/airline/"
+     elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:import namespace="http://packtpub.com/service/employee/" schemaLocation="TravelClassType.xsd"/>
+    <xs:include schemaLocation="FlightRequestType.xsd"/>
+    <xs:include schemaLocation="FlightConfirmationType.xsd"/>
+    <xs:include schemaLocation="FlightReservationType.xsd"/>
+    <xs:element name="flightTicketRequest" type="tns:FlightTicketRequestType"/>
+    <xs:complexType name="FlightTicketRequestType">
+        <xs:sequence>
+            <xs:element name="flightData" type="tns:FlightRequestType"/>
+            <xs:element name="travelClass" type="emp:TravelClassType"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by Marjan (FERF G) -->

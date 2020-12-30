@@ -1,0 +1,22 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bons0="http://packtpub.com/service/employee/"
+     xmlns:bons1="http://packtpub.com/service/airline/" xmlns:tns="http://packtpub.com/bpel/travel/"
+     targetNamespace="http://packtpub.com/bpel/travel/">
+    <xsd:import namespace="http://packtpub.com/service/airline/" schemaLocation="FlightRequestType.xsd"/>
+    <xsd:import namespace="http://packtpub.com/service/employee/" schemaLocation="EmployeeType.xsd"/>
+    <xsd:import namespace="http://packtpub.com/service/airline/" schemaLocation="FlightConfirmationType.xsd"/>
+    <xsd:element name="TravelApproval" type="tns:TravelRequestType"/>
+    <xsd:element name="TravelResponse" type="tns:TravelResponseType"/>
+    <xsd:complexType name="TravelRequestType">
+        <xsd:sequence>
+            <xsd:element name="employee" type="bons0:EmployeeType" minOccurs="0"/>
+            <xsd:element name="flightData" type="bons1:FlightRequestType" minOccurs="0"/>
+            <xsd:element name="email" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="TravelResponseType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="confirmationData" type="bons1:FlightConfirmationType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

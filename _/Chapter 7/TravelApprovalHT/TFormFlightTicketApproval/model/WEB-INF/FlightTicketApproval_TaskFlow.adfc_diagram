@@ -1,0 +1,61 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<SDM>
+   <OverallProperties
+      id="OverallProperties1">
+      <property
+         name="y">410.20117</property>
+      <property
+         name="x">91.5</property>
+   </OverallProperties>
+   <TaskFlowReturn
+      id="TaskFlowReturn2">
+      <property
+         name="activityId">taskReturn</property>
+      <property
+         name="finish">true</property>
+      <property
+         name="description">&lt;html>&lt;p>&lt;b>taskReturn&lt;/b>&lt;/p>&lt;p>Activity Type:  Task Flow Return&lt;/p>&lt;p>Outcome:  done&lt;/p></property>
+      <property
+         name="exceptionHandler">false</property>
+      <property
+         name="y">262.1494</property>
+      <property
+         name="x">274.5</property>
+   </TaskFlowReturn>
+   <WildcardControlFlowRule
+      id="WildcardControlFlowRule3">
+      <property
+         name="activityId">*</property>
+      <property
+         name="y">255.0</property>
+      <property
+         name="x">91.5</property>
+   </WildcardControlFlowRule>
+   <View
+      id="View4">
+      <property
+         name="activityId">taskDetails1_jspx</property>
+      <property
+         name="page">/taskDetails1.jspx</property>
+      <property
+         name="start">true</property>
+      <property
+         name="description">&lt;html>&lt;p>&lt;b>taskDetails1_jspx&lt;/b> (Default Activity)&lt;/p>&lt;p>Activity Type:  View&lt;/p></property>
+      <property
+         name="exceptionHandler">false</property>
+      <property
+         name="y">98.79883</property>
+      <property
+         name="x">91.5</property>
+   </View>
+   <ControlFlowCase
+      islink="true"
+      id="ControlFlowCase5"
+      from="WildcardControlFlowRule3"
+      to="TaskFlowReturn2">
+      <property
+         name="fromOutcome">closeTaskFlow</property>
+      <property
+         name="sdm:polyPoints">R50,127.5,255.14941,233.5,261.79883,L50</property>
+   </ControlFlowCase>
+</SDM>

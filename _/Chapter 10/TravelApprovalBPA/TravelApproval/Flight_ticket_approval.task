@@ -1,0 +1,45 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<taskDefinition targetNamespace="http://xmlns.oracle.com/Flight_ticket_approval" xmlns:task="http://xmlns.oracle.com/bpel/workflow/task" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:orcl="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc" xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20" xmlns="http://xmlns.oracle.com/bpel/workflow/taskDefinition">
+   <name>Flight_ticket_approval</name>
+   <id>${domain_id}_${process_id}_${process_revision}_Flight_ticket_approval</id>
+   <title type="STATIC"><value>Flight ticket approval</value></title>
+   <priority>3</priority>
+   <description>The Approval Manager has to confirm every ticket before making reservation. He can APPROVE or REJECT the ticket.</description>
+   <process processId="" processVersion=""/>
+   <routingSlip xmlns="http://xmlns.oracle.com/bpel/workflow/routingSlip">
+      <globalConfiguration>
+         <applicationContext/>
+         <taskOwner type="STATIC" identityType="user">weblogic</taskOwner>
+         <expirationDuration duration="P2DT3H" type="STATIC" useBusinessCalendar="false"/>
+      </globalConfiguration>
+      <participants isAdhocRoutingSupported="false">
+         <stage name="Stage1">
+            <participant name="Approval Manager">
+               <resource type="STATIC" identityType="user">weblogic</resource>
+            </participant>
+         </stage>
+      </participants>
+      <onErrorParticipant>
+         <resource type="STATIC" identityType="user">weblogic</resource>
+      </onErrorParticipant>
+      <notification includeTaskAttachments="false" actionable="false" secureNotifications="false"/>
+   </routingSlip>
+   <workflowConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://xmlns.oracle.com/bpel/workflow/configuration" xmlns:ns0="http://packtpub.com/service/airline/">
+      <outcomes>
+         <outcome>APPROVE</outcome>
+         <outcome>REJECT</outcome>
+      </outcomes>
+      <payload xmlSchemaDefinition="xsd/Flight_ticket_approvalPayload.xsd">
+         <messageAttribute name="confirmationData" attributeType="ELEMENT" type="ns0:confirmationData" updatable="false" external="false"/>
+      </payload>
+      <bpelEventListener>false</bpelEventListener>
+      <showCompleteGraphicalHistory>true</showCompleteGraphicalHistory>
+      <reevalTranslatablesOnUpdate>false</reevalTranslatablesOnUpdate>
+      <preActionMandatoryUserSteps/>
+      <allowInitiatorEditParticipants>false</allowInitiatorEditParticipants>
+      <allowParticipantsEditParticipants>false</allowParticipantsEditParticipants>
+      <globalCreationTask>false</globalCreationTask>
+      <enableAutoClaim>false</enableAutoClaim>
+      <workflowConditions/>
+   </workflowConfiguration>
+</taskDefinition>

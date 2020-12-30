@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--########################################################################################-->
+<!--####                                                                                ####-->
+<!--####          THIS IS AN AUTO GENERATED FILE. PLEASE DO NOT MANUALLY MODIFY         ####-->
+<!--#### CHANGES TO THIS FILE MAY PRODUCE UNEXPECTED BEHAVIOR AND WOULD BE OVERWRITTEN  ####-->
+<!--####                                                                                ####-->
+<!--########################################################################################-->
+<wsdl:definitions targetNamespace="http://packtpub.com/bpmn/travel/" xmlns:tns="http://packtpub.com/bpmn/travel/"  xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"  xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"  xmlns:tns6="http://packtpub.com/bpel/travel/" >
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://packtpub.com/bpmn/travel/">
+            <xsd:import namespace="http://packtpub.com/bpel/travel/" schemaLocation="xsd/TravelApprovalTypes.xsd"/>
+            <xsd:element name="operationCallbackResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="tns6:TravelResponse"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="operation">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="tns6:TravelApproval"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="operationCallbackResponse">
+        <wsdl:part name="parameters" element="tns:operationCallbackResponse"/>
+    </wsdl:message>
+    <wsdl:message name="operation">
+        <wsdl:part name="parameters" element="tns:operation"/>
+    </wsdl:message>
+    <wsdl:portType name="TravelApprovalPortTypeCallBack">
+        <wsdl:operation name="operationCallback">
+            <wsdl:input message="tns:operationCallbackResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="TravelApprovalPortType">
+        <wsdl:operation name="operation">
+            <wsdl:input message="tns:operation"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <plnk:partnerLinkType name="TravelApprovalPortTypePartnerLinkType">
+        <plnk:role name="TravelApprovalPortTypeProvider">
+            <plnk:portType name="tns:TravelApprovalPortType"/>
+        </plnk:role>
+        <plnk:role name="TravelApprovalPortTypeCallBackRequester">
+            <plnk:portType name="tns:TravelApprovalPortTypeCallBack"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

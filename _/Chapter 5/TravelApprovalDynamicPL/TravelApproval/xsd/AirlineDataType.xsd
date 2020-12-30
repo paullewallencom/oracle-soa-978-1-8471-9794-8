@@ -1,0 +1,25 @@
+<xs:schema elementFormDefault="qualified" 
+           targetNamespace="http://packtpub.com/bpel/travel/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing"
+           >
+
+  <xs:import namespace="http://schemas.xmlsoap.org/ws/2003/03/addressing" 
+   schemaLocation="oramds:///soa/shared/common/ws-addressing.xsd" /> 
+
+<xs:complexType name="AirlineDataType">
+
+    <xs:sequence>
+      <xs:element name="AirlineLink" maxOccurs="unbounded"> 
+        <xs:complexType>
+
+          <xs:sequence>
+            <xs:element ref="wsa:EndpointReference" /> 
+          </xs:sequence>
+
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+
+  </xs:complexType>
+</xs:schema>

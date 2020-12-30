@@ -1,0 +1,11 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://packtpub.com/service/employee/"
+     targetNamespace="http://packtpub.com/service/employee/">
+    <xsd:element name="employee" type="tns:EmployeeType"/>
+    <xsd:complexType name="EmployeeType">
+        <xsd:sequence>
+            <xsd:element name="FirstName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="LastName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="Department" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

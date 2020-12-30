@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MonitorModel id="1" xmlns="http://www.oracle.com/bpel/monitor">
+    <MonitorObjects id="2">
+        <ComponentPath name="ComponentPath_1" enabled="true" id="3"/>
+        <Indicators id="4">
+            <Indicator id="11" name="TravelResponse_BI" enabled="true">
+                <ActivityUsages id="12">
+                    <ActivityUsage id="13" activityName="clientCallBack">
+                        <EvaluationEvent>activate</EvaluationEvent>
+                    </ActivityUsage>
+                </ActivityUsages>
+                <MetricElements id="14">
+                    <MetricElement id="15" name="FirstName" dataType="string" xpath="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/employee/FirstName')"/>
+                    <MetricElement id="16" name="LastName" dataType="string" xpath="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/employee/LastName')"/>
+                    <MetricElement id="17" name="OriginFrom" dataType="string" xpath="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/flightData/OriginFrom')"/>
+                    <MetricElement id="18" name="DestinationTo" dataType="string" xpath="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/flightData/DestinationTo')"/>
+                    <MetricElement id="19" name="DepartureDate" dataType="dateTime" xpath="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/flightData/DesiredDepartureDate')"/>
+                    <MetricElement id="20" name="ReturnDate" dataType="dateTime" xpath="bpws:getVariableData('TravelRequest','travelRequest','/client:TravelApproval/flightData/DesiredReturnDate')"/>
+                    <MetricElement id="21" name="Price" dataType="double" xpath="bpws:getVariableData('FlightReponseBest','confirmationData','/ns1:confirmationData/Price')"/>
+                    <MetricElement id="22" name="Confirmed" dataType="string" xpath="bpws:getVariableData('TravelResponse','reservationData','/ns1:reservationData/Confirmed')"/>
+                </MetricElements>
+            </Indicator>
+        </Indicators>
+        <Paths id="5"/>
+        <ActivityPath mode="workflow" enabled="true" id="6"/>
+        <Counters id="7"/>
+    </MonitorObjects>
+    <Config id="8">
+        <FeatureSwitches enabled="true" id="9"/>
+    </Config>
+</MonitorModel>

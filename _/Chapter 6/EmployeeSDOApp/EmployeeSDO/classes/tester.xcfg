@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BC4JConfig version="11.1" xmlns="http://xmlns.oracle.com/bc4j/configuration">
+   <AppModuleConfigBag ApplicationName="employeesdo.EmployeeSDOAppModule">
+      <AppModuleConfig name="129B6FE0969" DBconnection="jdbc/HRDataSource" ApplicationName="employeesdo.EmployeeSDOAppModule" DeployPlatform="SI" IsLazyLoadingTrue="true" java.naming.factory.initial="oracle.jbo.common.JboInitialContextFactory" JDBCName="HRConn" BC4JConfigName="EmployeeSDOService" jbo.project="employeesdo.EmployeeSDO">
+         <Database jbo.locking.mode="optimistic" jbo.TypeMapEntries="Oracle" jbo.SQLBuilder="Oracle"/>
+         <Security AppModuleJndiName="employeesdo.EmployeeSDOAppModule"/>
+         <Tester FullProxyInterfaceName="employeesdo.common.EmployeeSDOAppModule"/>
+         <Custom LastUsedConfiguration="EmployeeSDOService" JDBCDataSource="jdbc/HRDataSource"/>
+      </AppModuleConfig>
+   </AppModuleConfigBag>
+</BC4JConfig>

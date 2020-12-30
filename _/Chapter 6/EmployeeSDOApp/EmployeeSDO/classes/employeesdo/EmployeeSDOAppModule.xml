@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="windows-1250" ?>
+<!DOCTYPE AppModule SYSTEM "jbo_03_01.dtd">
+<!---->
+<AppModule
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="EmployeeSDOAppModule"
+  Version="11.1.1.56.60"
+  ClearCacheOnRollback="true">
+  <DesignTime>
+    <Attr Name="_deployType" Value="4096"/>
+  </DesignTime>
+  <ViewUsage
+    Name="EmployeesView1"
+    ViewObjectName="employeesdo.EmployeesView"/>
+  <ViewUsage
+    Name="EmployeesView2"
+    ViewObjectName="employeesdo.EmployeesView"/>
+  <ViewLinkUsage
+    Name="EmpManagerFkLink1"
+    Version="11.1.1.56.60"
+    ViewLinkObjectName="employeesdo.EmpManagerFkLink"
+    SrcViewUsageName="employeesdo.EmployeeSDOAppModule.EmployeesView1"
+    DstViewUsageName="employeesdo.EmployeeSDOAppModule.EmployeesView2"
+    Reversed="false"/>
+  <Remote
+    Name="ServiceInterface"
+    ServerClassName="employeesdo.server.serviceinterface.EmployeeSDOServiceImpl">
+    <DesignTime>
+      <Attr Name="_webServiceName" Value="EmployeeSDOService"/>
+      <Attr Name="_targetNameSpace" Value="/employeesdo/common/"/>
+    </DesignTime>
+  </Remote>
+  <ServiceViewUsage
+    ViewUsageName="EmployeesView1"
+    CanCreate="true"
+    CanUpdate="true"
+    CanDelete="true"
+    CanMerge="true">
+    <DesignTime>
+      <Attr Name="_DeleteOpName" Value="deleteEmployeesView1"/>
+      <Attr Name="_ProcessCSOpName" Value="processCSEmployeesView1"/>
+      <Attr Name="_GetOpName" Value="getEmployeesView1"/>
+      <Attr Name="_MergeOpName" Value="mergeEmployeesView1"/>
+      <Attr Name="_FindOpName" Value="findEmployeesView1"/>
+      <Attr Name="_UpdateOpName" Value="updateEmployeesView1"/>
+      <Attr Name="_ProcessOpName" Value="processEmployeesView1"/>
+      <Attr Name="_CreateOpName" Value="createEmployeesView1"/>
+    </DesignTime>
+  </ServiceViewUsage>
+</AppModule>

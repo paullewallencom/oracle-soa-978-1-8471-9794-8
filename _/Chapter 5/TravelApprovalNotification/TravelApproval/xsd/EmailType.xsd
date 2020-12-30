@@ -1,0 +1,12 @@
+  <xs:schema elementFormDefault="qualified" 
+             targetNamespace="http://packtpub.com/bpel/travel/"
+             xmlns:tns="http://packtpub.com/bpel/travel/"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+    <xs:element name="email" type="tns:EmailType"/>
+    <xs:complexType name="EmailType">
+      <xs:sequence>
+        <xs:element name="Address" type="xs:string" /> 
+      </xs:sequence>
+    </xs:complexType>
+  </xs:schema>

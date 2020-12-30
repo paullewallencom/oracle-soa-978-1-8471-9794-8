@@ -1,0 +1,21 @@
+<?binding.jca FlightTicketBAMAdapter_bam.jca?>
+<wsdl:definitions name="FlightTicketBAMAdapter" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/bam/TravelApprovalBAM/TravelApproval/FlightTicketBAMAdapter" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/bam/TravelApprovalBAM/TravelApproval/FlightTicketBAMAdapter" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:imp1="http://xmlns.oracle.com/bam" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+    <plt:partnerLinkType name="writetoBAM_plt">
+        <plt:role name="writetoBAM_role">
+            <plt:portType name="tns:writetoBAM_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://xmlns.oracle.com/bam" schemaLocation="xsd/BAMServConn_TravelApproval_SELECTED_TICKETS.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="_SELECTED_TICKETSCollection_msg">
+        <wsdl:part name="_SELECTED_TICKETSCollection" element="imp1:_SELECTED_TICKETSCollection"/>
+    </wsdl:message>
+    <wsdl:portType name="writetoBAM_ptt">
+        <wsdl:operation name="writetoBAM">
+            <wsdl:input message="tns:_SELECTED_TICKETSCollection_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

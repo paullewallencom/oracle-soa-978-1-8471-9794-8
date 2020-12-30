@@ -1,0 +1,20 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+    
+     targetNamespace="http://packtpub.com/service/airline/"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://packtpub.com/service/airline/"
+     xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    >
+    <plnk:partnerLinkType name="flighLT">
+        <plnk:role name="airlineService">
+            <plnk:portType name="tns:FlightAvailabilityPT"/>
+        </plnk:role>
+        <plnk:role name="airlineCustomer">
+            <plnk:portType name="tns:FlightCallbackPT"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:import namespace="http://packtpub.com/service/airline/" location="Airline.wsdl"/>
+</wsdl:definitions>

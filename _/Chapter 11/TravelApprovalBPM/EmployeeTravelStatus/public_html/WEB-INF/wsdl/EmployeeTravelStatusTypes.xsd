@@ -1,0 +1,6 @@
+<xs:schema xmlns:tns="http://packtpub.com/service/employee/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://packtpub.com/service/employee/" elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
+    <xs:include schemaLocation="EmployeeType.xsd"/>
+    <xs:include schemaLocation="TravelClassType.xsd"/>
+</xs:schema>

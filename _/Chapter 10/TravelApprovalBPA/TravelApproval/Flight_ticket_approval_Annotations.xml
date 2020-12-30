@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<annotations>
+   <general>
+      <property name="Priority">3</property>
+      <property name="Outcomes">APPROVE,REJECT</property>
+      <property name="Documentation">The Approval Manager has to confirm every ticket before making reservation. He can APPROVE or REJECT the ticket.
+</property>
+      <property name="Subject">Flight ticket approval</property>
+   </general>
+   <expiration>
+      <property name="Duration">0002:03:00:00</property>
+   </expiration>
+   <assignments>
+      <pattern name="SingleApprover" assignees="Approval Manager"></pattern>
+   </assignments>
+</annotations>

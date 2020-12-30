@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?oracleBPM version="11.1.1" fileRevision="20100225"?>
+<definitions xsi:schemaLocation="http://www.omg.org/bpmn20" xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions" xmlns="http://www.omg.org/bpmn20" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <peopleGroup name="Approval Manager" id="ApprovalManager">
+        <ns2:OracleExtensions>
+            <ns2:GraphicsAttributes>
+                <ns2:Position y="0" x="0"/>
+                <ns2:Size height="0" width="276"/>
+            </ns2:GraphicsAttributes>
+        </ns2:OracleExtensions>
+    </peopleGroup>
+    <process processType="executable" name="TravelApproval" id="TravelApproval">
+        <ns2:OracleExtensions>
+            <ns2:FeatureSet>
+                <ns2:BooleanFeature value="false" name="atomic"/>
+                <ns2:BooleanFeature value="false" name="instanceScreenflow"/>
+                <ns2:BooleanFeature value="false" name="isCallable"/>
+                <ns2:BooleanFeature value="false" name="isInterface"/>
+                <ns2:BooleanFeature value="true" name="sharePredefineVariables"/>
+                <ns2:StringFeature value="Marcel" name="AUTHOR"/>
+                <ns2:StringFeature value="default" name="GreedyExecutionMode"/>
+                <ns2:StringFeature value="http://packtpub.com/bpmn/travel/" name="NAMESPACE"/>
+                <ns2:StringFeature value="PROJECT_DEFAULT" name="generatesEvents"/>
+                <ns2:StringFeature value="HORIZONTAL_LAYOUT" name="process-layout"/>
+                <ns2:StringFeature value="1.0" name="scale"/>
+                <ns2:StringFeature value="REGULAR" name="sealType"/>
+            </ns2:FeatureSet>
+        </ns2:OracleExtensions>
+        <serviceTask operationRef="employeeTravelStatus" serviceRef="Services.Externals.EmployeeTravelStatus" isForCompensation="false" name="Retrieve employee travel class" id="activity0">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="101" x="255"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+            <ioSpecification>
+                <dataInput name="employee" id="employee">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="employee" namespace="http://packtpub.com/service/employee/"/>
+                    </ns2:OracleExtensions>
+                </dataInput>
+                <dataOutput name="travelClass" id="travelClass">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="travelClass" namespace="http://packtpub.com/service/employee/"/>
+                    </ns2:OracleExtensions>
+                </dataOutput>
+                <inputSet id="activity0_uniqueInputSet">
+                    <dataInput name="employee" id="employee">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="employee" namespace="http://packtpub.com/service/employee/"/>
+                        </ns2:OracleExtensions>
+                    </dataInput>
+                </inputSet>
+                <outputSet id="activity0_uniqueOutputSet">
+                    <dataOutput name="travelClass" id="travelClass">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="travelClass" namespace="http://packtpub.com/service/employee/"/>
+                        </ns2:OracleExtensions>
+                    </dataOutput>
+                </outputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelRequest')/employee</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataInput('employee')</to>
+                </assignment>
+                <sourceRef>travelRequest</sourceRef>
+                <targetRef>employee</targetRef>
+            </dataInputAssociation>
+            <dataOutputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataOutput('travelClass')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelClass')</to>
+                </assignment>
+                <sourceRef>travelClass</sourceRef>
+                <targetRef>travelClass</targetRef>
+            </dataOutputAssociation>
+        </serviceTask>
+        <sendTask operationRef="process" messageRef="Services.BPEL.TicketOffersRetrieval.TicketOffersRetrieval" isForCompensation="false" name="Retrieve offers" id="activity1">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="104" x="371"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="sync"/>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+            <ioSpecification>
+                <dataInput name="flightTicketRequest" id="flightTicketRequest">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="FlightTicketRequest" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                    </ns2:OracleExtensions>
+                </dataInput>
+                <inputSet id="activity1_uniqueInputSet">
+                    <dataInput name="flightTicketRequest" id="flightTicketRequest">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="FlightTicketRequest" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                        </ns2:OracleExtensions>
+                    </dataInput>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelRequest')/flightData</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:ns="http://packtpub.com/bpel/ticketoffer/" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataInput('flightTicketRequest')/ns:flightData</to>
+                </assignment>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelClass')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:ns="http://packtpub.com/bpel/ticketoffer/" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataInput('flightTicketRequest')/ns:travelClass</to>
+                </assignment>
+                <sourceRef>travelRequest</sourceRef>
+                <sourceRef>travelClass</sourceRef>
+                <targetRef>flightTicketRequest</targetRef>
+            </dataInputAssociation>
+        </sendTask>
+        <receiveTask operationRef="processResponse" messageRef="Services.BPEL.TicketOffersRetrieval.TicketOffersRetrieval.Callback" instantiate="false" isForCompensation="false" name="Retrieve offers callback" id="activity2">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="104" x="490"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="sync"/>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="activity1" name="initiator"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+            <ioSpecification>
+                <dataOutput name="flightTicketResponse" id="flightTicketResponse">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                    </ns2:OracleExtensions>
+                </dataOutput>
+                <outputSet id="activity2_uniqueOutputSet">
+                    <dataOutput name="flightTicketResponse" id="flightTicketResponse">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                        </ns2:OracleExtensions>
+                    </dataOutput>
+                </outputSet>
+            </ioSpecification>
+            <dataOutputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataOutput('flightTicketResponse')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('selectedTicket')</to>
+                </assignment>
+                <sourceRef>flightTicketResponse</sourceRef>
+                <targetRef>selectedTicket</targetRef>
+            </dataOutputAssociation>
+        </receiveTask>
+        <userTask implementation="other" isForCompensation="false" name="Flight ticket approval" id="activity3">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="104" x="612"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="reinitiate"/>
+                    <ns2:BooleanFeature value="false" name="manualCreation"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                    <ns2:StringFeature value="REUSE_PAYLOAD" name="reinitiatorPolicy"/>
+                    <ns2:StringFeature value="SIMPLE" name="humanTaskType"/>
+                    <ns2:IntegerFeature value="3" name="priority"/>
+                </ns2:FeatureSet>
+                <ns2:HumanTask usesTransformations="false" humanTaskReference="HumanTasks.FlightTicketApproval"/>
+            </ns2:OracleExtensions>
+            <ioSpecification>
+                <dataInput name="flightTicketResponse" id="flightTicketResponse">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                    </ns2:OracleExtensions>
+                </dataInput>
+                <dataInput name="execData" id="execData">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="task" namespace="http://xmlns.oracle.com/bpel/workflow/task"/>
+                    </ns2:OracleExtensions>
+                </dataInput>
+                <dataOutput name="outcome" id="outcome">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" type="string" namespace="http://www.w3.org/2001/XMLSchema"/>
+                    </ns2:OracleExtensions>
+                </dataOutput>
+                <dataOutput name="execData" id="execData">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="task" namespace="http://xmlns.oracle.com/bpel/workflow/task"/>
+                    </ns2:OracleExtensions>
+                </dataOutput>
+                <inputSet id="activity3_uniqueInputSet">
+                    <dataInput name="flightTicketResponse" id="flightTicketResponse">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                        </ns2:OracleExtensions>
+                    </dataInput>
+                    <dataInput name="execData" id="execData">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="task" namespace="http://xmlns.oracle.com/bpel/workflow/task"/>
+                        </ns2:OracleExtensions>
+                    </dataInput>
+                </inputSet>
+                <outputSet id="activity3_uniqueOutputSet">
+                    <dataOutput name="outcome" id="outcome">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" type="string" namespace="http://www.w3.org/2001/XMLSchema"/>
+                        </ns2:OracleExtensions>
+                    </dataOutput>
+                    <dataOutput name="execData" id="execData">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="task" namespace="http://xmlns.oracle.com/bpel/workflow/task"/>
+                        </ns2:OracleExtensions>
+                    </dataOutput>
+                </outputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('selectedTicket')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataInput('flightTicketResponse')</to>
+                </assignment>
+                <sourceRef>selectedTicket</sourceRef>
+                <targetRef>flightTicketResponse</targetRef>
+            </dataInputAssociation>
+            <dataOutputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataOutput('outcome')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('taskOutcome')</to>
+                </assignment>
+                <sourceRef>outcome</sourceRef>
+                <targetRef>taskOutcome</targetRef>
+            </dataOutputAssociation>
+            <performer name="Approval Manager" id="ApprovalManager"/>
+        </userTask>
+        <sendTask operationRef="process" messageRef="Services.BPEL.TicketReservation.TicketReservation" isForCompensation="false" name="Make  reservation" id="activity4">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="211" x="780"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="sync"/>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+            <ioSpecification>
+                <dataInput name="flightTicketResponse" id="flightTicketResponse">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                    </ns2:OracleExtensions>
+                </dataInput>
+                <inputSet id="activity4_uniqueInputSet">
+                    <dataInput name="flightTicketResponse" id="flightTicketResponse">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                        </ns2:OracleExtensions>
+                    </dataInput>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('selectedTicket')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataInput('flightTicketResponse')</to>
+                </assignment>
+                <sourceRef>selectedTicket</sourceRef>
+                <targetRef>flightTicketResponse</targetRef>
+            </dataInputAssociation>
+        </sendTask>
+        <receiveTask operationRef="processResponse" messageRef="Services.BPEL.TicketReservation.TicketReservation.Callback" instantiate="false" isForCompensation="false" name="Make reservation callback" id="activity5">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="209" x="914"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="sync"/>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="activity4" name="initiator"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+            <ioSpecification>
+                <dataOutput name="reservationData" id="reservationData">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="reservationData" namespace="http://packtpub.com/service/airline/"/>
+                    </ns2:OracleExtensions>
+                </dataOutput>
+                <outputSet id="activity5_uniqueOutputSet">
+                    <dataOutput name="reservationData" id="reservationData">
+                        <ns2:OracleExtensions>
+                            <ns2:TypeRef isArray="false" element="reservationData" namespace="http://packtpub.com/service/airline/"/>
+                        </ns2:OracleExtensions>
+                    </dataOutput>
+                </outputSet>
+            </ioSpecification>
+            <dataOutputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20" xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20">xp20:matches(string(bpmn:getDataOutput('reservationData')/Confirmed), '\s*(?i:true|1)\s*')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelResponse')/confirmationData/Approved</to>
+                </assignment>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataOutput('reservationData')/FlightNo</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelResponse')/confirmationData/FlightNo</to>
+                </assignment>
+                <sourceRef>reservationData</sourceRef>
+                <targetRef>travelResponse</targetRef>
+            </dataOutputAssociation>
+        </receiveTask>
+        <startEvent isInterrupting="false" name="Retrieve travel request" id="startEvent0">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="103" x="97"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="sync"/>
+                    <ns2:BooleanFeature value="false" name="catchAllErrors"/>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="operation" name="definedOperationName"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+            <dataOutput name="TravelRequest" id="TravelRequest">
+                <ns2:OracleExtensions>
+                    <ns2:TypeRef isArray="false" element="TravelApproval" namespace="http://packtpub.com/bpel/travel/"/>
+                </ns2:OracleExtensions>
+            </dataOutput>
+            <dataOutputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataOutput('TravelRequest')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelRequest')</to>
+                </assignment>
+                <sourceRef>TravelRequest</sourceRef>
+                <targetRef>travelRequest</targetRef>
+            </dataOutputAssociation>
+            <outputSet id="startEvent0_uniqueOutputSet">
+                <dataOutput name="TravelRequest" id="TravelRequest">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="TravelApproval" namespace="http://packtpub.com/bpel/travel/"/>
+                    </ns2:OracleExtensions>
+                </dataOutput>
+            </outputSet>
+            <messageEventDefinition/>
+        </startEvent>
+        <endEvent name="End" id="endEvent0">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="109" x="1059"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="sync"/>
+                    <ns2:BooleanFeature value="false" name="catchAllErrors"/>
+                    <ns2:StringFeature value="" name="associatedProcess"/>
+                    <ns2:StringFeature value="" name="associatedNode"/>
+                    <ns2:StringFeature value="startEvent0" name="initiator"/>
+                    <ns2:StringFeature value="operationCallback" name="definedOperationName"/>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+            <dataInput name="TravelResponse" id="TravelResponse">
+                <ns2:OracleExtensions>
+                    <ns2:TypeRef isArray="false" element="TravelResponse" namespace="http://packtpub.com/bpel/travel/"/>
+                </ns2:OracleExtensions>
+            </dataInput>
+            <dataInputAssociation>
+                <ns2:OracleExtensions/>
+                <assignment language="http://www.w3.org/1999/XPath">
+                    <ns2:OracleExtensions>
+                        <ns2:DataAssignment mode="simple" isCustom="false"/>
+                    </ns2:OracleExtensions>
+                    <from language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataObject('travelResponse')</from>
+                    <to language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">bpmn:getDataInput('TravelResponse')</to>
+                </assignment>
+                <sourceRef>travelResponse</sourceRef>
+                <targetRef>TravelResponse</targetRef>
+            </dataInputAssociation>
+            <inputSet id="endEvent0_uniqueInputSet">
+                <dataInput name="TravelResponse" id="TravelResponse">
+                    <ns2:OracleExtensions>
+                        <ns2:TypeRef isArray="false" element="TravelResponse" namespace="http://packtpub.com/bpel/travel/"/>
+                    </ns2:OracleExtensions>
+                </dataInput>
+            </inputSet>
+            <messageEventDefinition/>
+        </endEvent>
+        <exclusiveGateway gatewayDirection="unspecified" name="Task outcome?" id="gateway0">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="110" x="714"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </exclusiveGateway>
+        <exclusiveGateway gatewayDirection="unspecified" name="Merge" id="gateway1">
+            <ns2:OracleExtensions>
+                <ns2:GraphicsAttributes>
+                    <ns2:Position y="109" x="971"/>
+                    <ns2:Size height="21" width="21"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet>
+                    <ns2:StringFeature value="PROCESS_DEFAULT" name="generatesEvents"/>
+                    <ns2:StringFeature value="Begin Level" name="level"/>
+                    <ns2:StringFeature value="USE_PROCESS_PERMISSION" name="sealType"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </exclusiveGateway>
+        <sequenceFlow targetRef="activity0" sourceRef="startEvent0" name="sf40" id="sf40">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="activity1" sourceRef="activity0" name="sf42" id="sf42">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="activity2" sourceRef="activity1" name="sf44" id="sf44">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="activity3" sourceRef="activity2" name="sf46" id="sf46">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="gateway0" sourceRef="activity3" name="sf48" id="sf48">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes>
+                    <ns2:Positions y="104" x="769"/>
+                </ns2:SequenceFlowAttributes>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="769,104" name="curve"/>
+                    <ns2:StringFeature value="ORTHOGONAL" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="gateway1" sourceRef="gateway0" name="sf50" id="sf50">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="activity4" sourceRef="gateway0" name="sf53" id="sf53">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                    <ns2:StringFeature value="" name="userName"/>
+                    <ns2:IntegerFeature value="0" name="order"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.w3.org/1999/XPath" xmlns:bpmn="http://www.omg.org/bpmn20">(bpmn:getDataObject('taskOutcome') = 'APPROVE')
+                <ns2:OracleExtensions>
+                    <ns2:Expression mode="simple"/>
+                </ns2:OracleExtensions>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow targetRef="activity5" sourceRef="activity4" name="sf56" id="sf56">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="gateway1" sourceRef="activity5" name="sf59" id="sf59">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <sequenceFlow targetRef="endEvent0" sourceRef="gateway1" name="sf62" id="sf62">
+            <ns2:OracleExtensions>
+                <ns2:SequenceFlowAttributes/>
+                <ns2:FeatureSet>
+                    <ns2:BooleanFeature value="false" name="collapseMessage"/>
+                    <ns2:StringFeature value="-2147483648,-2147483648" name="curve"/>
+                    <ns2:StringFeature value="STRAIGHT" name="routing"/>
+                </ns2:FeatureSet>
+            </ns2:OracleExtensions>
+        </sequenceFlow>
+        <dataObject name="travelRequest" id="travelRequest">
+            <ns2:OracleExtensions>
+                <ns2:DataObjectType initialize="true">
+                    <ns2:TypeRef isArray="false" element="TravelApproval" namespace="http://packtpub.com/bpel/travel/"/>
+                </ns2:DataObjectType>
+            </ns2:OracleExtensions>
+        </dataObject>
+        <dataObject name="travelResponse" id="travelResponse">
+            <ns2:OracleExtensions>
+                <ns2:DataObjectType initialize="true">
+                    <ns2:TypeRef isArray="false" element="TravelResponse" namespace="http://packtpub.com/bpel/travel/"/>
+                </ns2:DataObjectType>
+            </ns2:OracleExtensions>
+        </dataObject>
+        <dataObject name="travelClass" id="travelClass">
+            <ns2:OracleExtensions>
+                <ns2:DataObjectType initialize="true">
+                    <ns2:TypeRef isArray="false" element="travelClass" namespace="http://packtpub.com/service/employee/"/>
+                </ns2:DataObjectType>
+            </ns2:OracleExtensions>
+        </dataObject>
+        <dataObject name="selectedTicket" id="selectedTicket">
+            <ns2:OracleExtensions>
+                <ns2:DataObjectType initialize="true">
+                    <ns2:TypeRef isArray="false" element="FlightTicketResponse" namespace="http://packtpub.com/bpel/ticketoffer/"/>
+                </ns2:DataObjectType>
+            </ns2:OracleExtensions>
+        </dataObject>
+        <dataObject name="taskOutcome" id="taskOutcome">
+            <ns2:OracleExtensions>
+                <ns2:DataObjectType initialize="true">
+                    <ns2:TypeRef isArray="false" type="string" namespace="http://www.w3.org/2001/XMLSchema"/>
+                </ns2:DataObjectType>
+            </ns2:OracleExtensions>
+        </dataObject>
+    </process>
+</definitions>

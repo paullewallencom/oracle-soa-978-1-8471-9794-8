@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://schemas.oracle.com/events/edl"
+             targetNamespace="http://packtpub.com/events/travel/">
+    <schema-import namespace="http://packtpub.com/bpel/travel/"
+                   location="xsd/TravelRequestType.xsd"/>
+    <schema-import namespace="http://packtpub.com/service/airline/"
+                   location="xsd/FlightReservationType.xsd"/>
+    <event-definition name="NewTravelRequest">
+        <content xmlns:ns0="http://packtpub.com/bpel/travel/"
+                 element="ns0:TravelApproval"/>
+    </event-definition>
+    <event-definition name="ReservationSuccessful">
+        <content xmlns:ns1="http://packtpub.com/service/airline/"
+                 element="ns1:reservationData"/>
+    </event-definition>
+</definitions>

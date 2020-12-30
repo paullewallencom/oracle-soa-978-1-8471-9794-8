@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<JavaBean xmlns="http://xmlns.oracle.com/adfm/beanmodel" version="11.1.1.56.60"
+          id="FlightTicketApprovalPayloadType"
+          Package="TFormFlightTicketApproval_FlightTicketApproval"
+          BeanClass="TFormFlightTicketApproval_FlightTicketApproval.FlightTicketApprovalPayloadType"
+          isJavaBased="false">
+  <AccessorAttribute id="employee" IsCollection="true"
+                     BeanClass="TFormFlightTicketApproval_FlightTicketApproval.EmployeeType"
+                     CollectionBeanClass="TFormFlightTicketApproval_FlightTicketApproval.EmployeeType_employee_Operations">
+    <Properties>
+      <Property Name="nextSiblingNamespace"
+                Value="http://packtpub.com/service/airline/"/>
+      <Property Name="nextSibling" Value="confirmationData"/>
+      <Property Name="minOccurs" Value="1"/>
+      <Property Name="maxOccurs" Value="1"/>
+      <Property Name="LABEL" Value="Employee"/>
+      <Property Name="nillable" Value="false"/>
+      <Property Name="originalName" Value="employee"/>
+      <Property Name="targetNamespace"
+                Value="http://packtpub.com/service/employee/"/>
+    </Properties>
+  </AccessorAttribute>
+  <AccessorAttribute id="confirmationData" IsCollection="true"
+                     BeanClass="TFormFlightTicketApproval_FlightTicketApproval.FlightConfirmationType"
+                     CollectionBeanClass="TFormFlightTicketApproval_FlightTicketApproval.FlightConfirmationType_confirmationData_Operations">
+    <Properties>
+      <Property Name="minOccurs" Value="1"/>
+      <Property Name="maxOccurs" Value="1"/>
+      <Property Name="LABEL" Value="Confirmation Data"/>
+      <Property Name="nillable" Value="false"/>
+      <Property Name="originalName" Value="confirmationData"/>
+      <Property Name="targetNamespace"
+                Value="http://packtpub.com/service/airline/"/>
+    </Properties>
+  </AccessorAttribute>
+</JavaBean>

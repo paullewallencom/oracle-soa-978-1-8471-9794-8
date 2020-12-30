@@ -1,0 +1,174 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Mon Jul 05 15:12:14 CEST 2010
+  Author:  SOA11g
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="TicketOffersRetrieval"
+         targetNamespace="http://packtpub.com/bpel/ticketoffers/"
+         xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:client="http://packtpub.com/bpel/ticketoffers/"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://packtpub.com/service/airline/"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction"
+         xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:med="http://schemas.oracle.com/mediator/xpath"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:bpmn="http://schemas.oracle.com/bpm/xpath"
+         xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns2="http://packtpub.com/bpel/ticketoffer/">
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="TicketOffersRetrieval" partnerLinkType="client:TicketOffersRetrieval" myRole="TicketOffersRetrievalProvider" partnerRole="TicketOffersRetrievalRequester"/>
+        <partnerLink myRole="UnitedairlineCustomer" name="UnitedAirlines"
+                     partnerRole="UnitedairlineService"
+                     partnerLinkType="ns1:UnitedflightLT"/>
+        <partnerLink myRole="airlineCustomer" name="AmericanAirlines"
+                     partnerRole="airlineService"
+                     partnerLinkType="ns1:flightLT"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:TicketOffersRetrievalRequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:TicketOffersRetrievalResponseMessage"/>
+        <variable name="FlightDetails"
+                  messageType="ns1:FlightTicketRequestMessage"/>
+        <variable name="FlightResponseAA"
+                  messageType="ns1:TravelResponseMessage"/>
+        <variable name="FlightResponseUA"
+                  messageType="ns1:TravelResponseMessage"/>
+    </variables>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in TicketOffersRetrieval.wsdl) -->
+        <receive name="receiveInput" partnerLink="TicketOffersRetrieval" portType="client:TicketOffersRetrieval" operation="process" variable="inputVariable" createInstance="yes"/>
+
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <assign name="TransformFlightDetails">
+            <bpelx:annotation>
+                <bpelx:pattern>transformation</bpelx:pattern>
+            </bpelx:annotation>
+            <copy>
+                <from expression="ora:processXSLT('xsl/Transformation_1.xsl',bpws:getVariableData('inputVariable','payload'))"/>
+                <to variable="FlightDetails" part="flightTicketRequest"/>
+            </copy>
+        </assign>
+        <scope name="Scope_1">
+            <bpelx:annotation>
+                <bpelx:general>
+                    <bpelx:property name="userLabel">CheckFlightAvailability</bpelx:property>
+                </bpelx:general>
+            </bpelx:annotation>
+            <flow name="Flow_1">
+                <sequence name="Sequence_1">
+                    <invoke name="UnitedAirlines" inputVariable="FlightDetails"
+                            partnerLink="UnitedAirlines"
+                            portType="ns1:UnitedFlightAvailabilityPT"
+                            operation="FlightAvailability"/>
+                    <receive name="UnitedAirlinesCallback" createInstance="no"
+                             variable="FlightResponseUA"
+                             partnerLink="UnitedAirlines"
+                             portType="ns1:UnitedFlightCallbackPT"
+                             operation="FlightTicketCallback"/>
+                </sequence>
+                <sequence name="Sequence_1">
+                    <invoke name="AmericanAirlines"
+                            inputVariable="FlightDetails"
+                            partnerLink="AmericanAirlines"
+                            portType="ns1:FlightAvailabilityPT"
+                            operation="FlightAvailability"/>
+                    <receive name="AmericanAirlinesCallback" createInstance="no"
+                             variable="FlightResponseAA"
+                             partnerLink="AmericanAirlines"
+                             portType="ns1:FlightCallbackPT"
+                             operation="FlightTicketCallback"/>
+                </sequence>
+            </flow>
+        </scope>
+        <scope name="CompareOffers">
+            <switch name="Switch_1">
+                <case condition="number(bpws:getVariableData('FlightResponseAA','confirmationData','/ns1:confirmationData/Price'))&lt;=number(bpws:getVariableData('FlightResponseUA','confirmationData','/ns1:confirmationData/Price'))">
+                    <bpelx:annotation>
+                        <bpelx:general>
+                            <bpelx:property name="userLabel">American is cheaper</bpelx:property>
+                        </bpelx:general>
+                    </bpelx:annotation>
+                    <assign name="setOutput">
+                        <copy>
+                            <from variable="FlightResponseAA"
+                                  part="confirmationData"
+                                  query="/ns1:confirmationData"/>
+                            <to variable="outputVariable" part="payload"
+                                query="/ns2:FlightTicketResponse/ns2:flightData"/>
+                        </copy>
+                        <copy>
+                            <from expression='string("American")'/>
+                            <to variable="outputVariable" part="payload"
+                                query="/ns2:FlightTicketResponse/ns2:airline"/>
+                        </copy>
+                    </assign>
+                </case>
+                <otherwise>
+                    <assign name="setOutput">
+                        <copy>
+                            <from variable="FlightResponseUA"
+                                  part="confirmationData"
+                                  query="/ns1:confirmationData"/>
+                            <to variable="outputVariable" part="payload"
+                                query="/ns2:FlightTicketResponse/ns2:flightData"/>
+                        </copy>
+                        <copy>
+                            <from expression='string("United")'/>
+                            <to variable="outputVariable" part="payload"
+                                query="/ns2:FlightTicketResponse/ns2:airline"/>
+                        </copy>
+                    </assign>
+                </otherwise>
+            </switch>
+        </scope>
+        <invoke name="callbackClient" partnerLink="TicketOffersRetrieval" portType="client:TicketOffersRetrievalCallback" operation="processResponse" inputVariable="outputVariable"/>
+    </sequence>
+</process>

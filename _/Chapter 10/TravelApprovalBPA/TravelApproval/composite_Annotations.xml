@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?><compositeAnnotations xmlns="http://xmlns.oracle.com/bpa/compositeAnnotations" name="composite_Annotations.xml">
+<componentAnnotation name="TravelApproval" guid="d562fab0-84f2-11df-4948-000c29b1a451" type="BPEL"/>
+<componentAnnotation name="Flight_ticket_approval" guid="69d34207-84f9-11df-4948-000c29b1a451" type="WORKFLOW"/>
+</compositeAnnotations>

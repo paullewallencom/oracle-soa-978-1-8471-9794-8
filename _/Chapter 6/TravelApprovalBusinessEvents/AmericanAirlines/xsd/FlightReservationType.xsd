@@ -1,0 +1,11 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://packtpub.com/service/airline/"
+     targetNamespace="http://packtpub.com/service/airline/">
+    <xsd:element name="reservationData" type="tns:FlightReservationType"/>
+    <xsd:complexType name="FlightReservationType">
+        <xsd:sequence>
+            <xsd:element name="FlightNo" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="Confirmed" type="xsd:boolean" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

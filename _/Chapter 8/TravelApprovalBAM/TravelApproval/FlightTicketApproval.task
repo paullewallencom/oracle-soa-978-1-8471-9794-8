@@ -1,0 +1,68 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<taskDefinition targetNamespace="http://xmlns.oracle.com/TravelApprovalHT/TravelApproval/FlightTicketApproval" xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20" xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc" xmlns:task="http://xmlns.oracle.com/bpel/workflow/task" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://xmlns.oracle.com/bpel/workflow/taskDefinition"
+                xmlns:ns0="http://xmlns.oracle.com/bpel/workflow/common"
+                xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+                xmlns:evidence="http://xmlns.oracle.com/bpel/workflow/TaskEvidenceService"
+                xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+                xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+                xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+                xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+                xmlns:ns1="http://packtpub.com/service/employee/"
+                xmlns:ns2="http://packtpub.com/service/airline/">
+   <name>FlightTicketApproval</name>
+   <id>${domain_id}_${process_id}_${process_revision}_FlightTicketApproval</id>
+   <title type="XPATH"><value>string('Flight ticket approval')</value></title>
+   <priority>3</priority>
+   <description>Approval Manager can APPROVE or REJECT every selected flight ticket before 
+making the reservation.</description>
+   <process processId="" processVersion=""/>
+   <routingSlip xmlns="http://xmlns.oracle.com/bpel/workflow/routingSlip">
+      <globalConfiguration>
+         <applicationContext></applicationContext>
+         <taskOwner type="STATIC" identityType="user">weblogic</taskOwner>
+         <expirationDuration duration="PT5M" type="STATIC"
+                             useBusinessCalendar="false"/>
+      </globalConfiguration>
+      <participants isAdhocRoutingSupported="false">
+         <stage name="Stage1">
+            <participant name="Approval Manager">
+               <resource type="STATIC" identityType="user">weblogic</resource>
+            </participant>
+         </stage>
+      </participants>
+      <onErrorParticipant>
+         <resource type="STATIC" identityType="user">weblogic</resource>
+      </onErrorParticipant>
+      <notification includeTaskAttachments="false" actionable="false"
+                    secureNotifications="false">
+         <action name="EXPIRE" recipient="OWNER"><![CDATA[concat(string('Task '), /task:task/task:title, string(' has expired.'))]]></action>
+         <action name="ERROR" recipient="OWNER"><![CDATA[concat(string('Task '), /task:task/task:title, string(' requires your attention.'))]]></action>
+      </notification>
+   </routingSlip>
+   <workflowConfiguration xmlns="http://xmlns.oracle.com/bpel/workflow/configuration"
+                          xmlns:ns0="http://packtpub.com/service/employee/"
+                          xmlns:ns1="http://packtpub.com/service/airline/"
+                          xmlns:ns2="http://packtpub.com/service/airline/">
+      <outcomes>
+         <outcome>APPROVE</outcome>
+         <outcome>REJECT</outcome>
+      </outcomes>
+      <payload xmlSchemaDefinition="xsd/FlightTicketApprovalPayload.xsd">
+         <messageAttribute name="employee" attributeType="ELEMENT"
+                           type="ns0:employee" updatable="false"
+                           external="false"/>
+         <messageAttribute name="confirmationData" attributeType="ELEMENT"
+                           type="ns2:confirmationData" updatable="false"
+                           external="false"/>
+      </payload>
+      <bpelEventListener>false</bpelEventListener>
+      <showCompleteGraphicalHistory>true</showCompleteGraphicalHistory>
+      <reevalTranslatablesOnUpdate>false</reevalTranslatablesOnUpdate>
+      <preActionMandatoryUserSteps/>
+      <allowInitiatorEditParticipants>false</allowInitiatorEditParticipants>
+      <allowParticipantsEditParticipants>false</allowParticipantsEditParticipants>
+      <globalCreationTask>false</globalCreationTask>
+      <enableAutoClaim>true</enableAutoClaim>
+      <workflowConditions/>
+   </workflowConfiguration>
+</taskDefinition>

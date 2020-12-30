@@ -1,0 +1,157 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Sun Jul 04 20:48:03 CEST 2010
+  Author:  SOA11g
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="UnitedAirlines"
+         targetNamespace="http://packtpub.com/service/airline/"
+         xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:client="http://packtpub.com/service/airline/"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns7="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ns1="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ns5="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:ns4="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns3="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:ns6="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:ns2="http://schemas.oracle.com/xpath/extension/ldap">
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="UnitedAirlines" partnerLinkType="client:UnitedflightLT" myRole="UnitedairlineService" partnerRole="UnitedairlineCustomer"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:FlightTicketRequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:TravelResponseMessage"/>
+        <variable name="MakeReservation_InputVariable"
+                  messageType="client:TravelResponseMessage"/>
+        <variable name="MakeReservation_OutputVariable"
+                  messageType="client:ReservationResponseMessage"/>
+    </variables>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in UnitedAirlines.wsdl) -->
+
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <pick name="Pick_1" createInstance="yes">
+            <onMessage variable="inputVariable" partnerLink="UnitedAirlines"
+                       portType="client:UnitedFlightAvailabilityPT"
+                       operation="FlightAvailability">
+                <sequence>
+                    <assign name="setOutput">
+                        <copy>
+                            <from expression='string("N432E")'/>
+                            <to variable="outputVariable"
+                                part="confirmationData"
+                                query="/client:confirmationData/FlightNo"/>
+                        </copy>
+                        <copy>
+                            <from variable="inputVariable"
+                                  part="flightTicketRequest"
+                                  query="/client:flightTicketRequest/client:travelClass"/>
+                            <to variable="outputVariable"
+                                part="confirmationData"
+                                query="/client:confirmationData/TravelClass"/>
+                        </copy>
+                        <copy>
+                            <from expression="number(223.31)"/>
+                            <to variable="outputVariable"
+                                part="confirmationData"
+                                query="/client:confirmationData/Price"/>
+                        </copy>
+                        <copy>
+                            <from expression="xp20:format-dateTime(substring-before(string(bpws:getVariableData('inputVariable','flightTicketRequest','/client:flightTicketRequest/client:flightData/DesiredDepartureDate')),'+'),'[Y]-[M01]-[D01]T[h01]:[m01]:[s01]')"/>
+                            <to variable="outputVariable"
+                                part="confirmationData"
+                                query="/client:confirmationData/DepartureDateTime"/>
+                        </copy>
+                        <copy>
+                            <from expression="xp20:format-dateTime(substring-before(string(bpws:getVariableData('inputVariable','flightTicketRequest','/client:flightTicketRequest/client:flightData/DesiredReturnDate')),'+'),'[Y]-[M01]-[D01]T[h01]:[m01]:[s01]')"/>
+                            <to variable="outputVariable"
+                                part="confirmationData"
+                                query="/client:confirmationData/ReturnDateTime"/>
+                        </copy>
+                        <copy>
+                            <from expression="true()"/>
+                            <to variable="outputVariable"
+                                part="confirmationData"
+                                query="/client:confirmationData/Approved"/>
+                        </copy>
+                    </assign>
+                    <invoke name="callbackClient" partnerLink="UnitedAirlines"
+                            portType="client:UnitedFlightCallbackPT"
+                            operation="FlightTicketCallback"
+                            inputVariable="outputVariable"/>
+                </sequence>
+            </onMessage>
+            <onMessage variable="MakeReservation_InputVariable"
+                       partnerLink="UnitedAirlines"
+                       portType="client:UnitedFlightAvailabilityPT"
+                       operation="MakeReservation">
+                <bpelx:annotation>
+                    <bpelx:pattern></bpelx:pattern>
+                </bpelx:annotation>
+                <sequence>
+                    <assign name="setOutput">
+                        <copy>
+                            <from variable="MakeReservation_InputVariable"
+                                  part="confirmationData"
+                                  query="/client:confirmationData/FlightNo"/>
+                            <to variable="MakeReservation_OutputVariable"
+                                part="reservationData"
+                                query="/client:reservationData/FlightNo"/>
+                        </copy>
+                        <copy>
+                            <from expression="true()"/>
+                            <to variable="MakeReservation_OutputVariable"
+                                part="reservationData"
+                                query="/client:reservationData/Confirmed"/>
+                        </copy>
+                    </assign>
+                    <invoke name="clientCallback"
+                            inputVariable="MakeReservation_OutputVariable"
+                            partnerLink="UnitedAirlines"
+                            portType="client:UnitedFlightCallbackPT"
+                            operation="MakeReservationCallback"/>
+                </sequence>
+            </onMessage>
+        </pick>
+    </sequence>
+</process>

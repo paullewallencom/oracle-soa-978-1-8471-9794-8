@@ -1,0 +1,232 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Fri Jun 04 14:21:44 CEST 2010
+  Author:  SOA11g
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="TravelApproval"
+               targetNamespace="http://packtpub.com/bpel/travel/"
+               xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+               xmlns:client="http://packtpub.com/bpel/travel/"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+               xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://packtpub.com/service/airline/"
+         xmlns:ns2="http://packtpub.com/service/employee/"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction"
+         xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:med="http://schemas.oracle.com/mediator/xpath"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:bpmn="http://schemas.oracle.com/bpm/xpath"
+         xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:ns3="http://schemas.xmlsoap.org/ws/2003/03/addressing">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="client" partnerLinkType="client:travelLT" myRole="travelService" partnerRole="travelServiceCustomer"/>
+    <partnerLink name="EmployeeTravelStatus"
+                 partnerRole="employeeTravelStatusService"
+                 partnerLinkType="ns2:employeeLT"/>
+   
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="TravelRequest" messageType="client:TravelRequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="TravelResponse"
+              messageType="ns1:TravelResponseMessage"/>
+   
+    <variable name="EmployeeTravelStatusResponse"
+              messageType="ns2:EmployeeTravelStatusResponseMessage"/>
+    <variable name="FlightDetails"
+              messageType="ns1:FlightTicketRequestMessage"/>
+    <variable name="index" type="xsd:int"/>
+    <variable name="CombinedFlightResponse"
+              messageType="ns1:TravelResponseMessage"/>
+    <variable name="TempResponse" messageType="ns1:TravelResponseMessage"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in TravelApproval.wsdl) -->
+    <receive name="receiveTravelRequest" partnerLink="client" portType="client:TravelApprovalPT" operation="TravelApproval"
+             variable="TravelRequest" createInstance="yes"/>
+
+    <!-- Generate reply to synchronous request -->
+    <scope name="Scope_1">
+      <bpelx:annotation>
+        <bpelx:general>
+          <bpelx:property name="userLabel">RetrieveEmployeeTravelStatus</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>
+      <variables>
+         <variable name="EmployeeTravelStatusRequest"
+              messageType="ns2:EmployeeTravelStatusRequestMessage"/>
+      </variables>
+      <sequence>
+        <assign name="AssignEmployee">
+          <copy>
+            <from variable="TravelRequest" part="travelRequest"
+                  query="/client:TravelApproval/employee"/>
+            <to variable="EmployeeTravelStatusRequest" part="employee"
+                query="/ns2:employee"/>
+          </copy>
+        </assign>
+        <invoke name="EmployeeTravelStatus"
+                inputVariable="EmployeeTravelStatusRequest"
+                outputVariable="EmployeeTravelStatusResponse"
+                partnerLink="EmployeeTravelStatus"
+                portType="ns2:EmployeeTravelStatusPT"
+                operation="EmployeeTravelStatus"/>
+        <assign name="AssignFlightDetails">
+          <copy>
+            <from variable="TravelRequest" part="travelRequest"
+                  query="/client:TravelApproval/flightData"/>
+            <to variable="FlightDetails" part="flightTicketRequest"
+                query="/ns1:flightTicketRequest/ns1:flightData"/>
+          </copy>
+          <copy>
+            <from variable="EmployeeTravelStatusResponse" part="travelClass"
+                  query="/ns2:travelClass"/>
+            <to variable="FlightDetails" part="flightTicketRequest"
+                query="/ns1:flightTicketRequest/ns1:travelClass"/>
+          </copy>
+        </assign>
+      </sequence>
+    </scope>
+    <scope name="Scope_2">
+      <bpelx:annotation>
+        <bpelx:general>
+          <bpelx:property name="userLabel">CheckFlightAvailability</bpelx:property>
+        </bpelx:general>
+      </bpelx:annotation>      
+      <variables>
+        <variable name="FlightResponse"
+                  messageType="ns1:TravelResponseMessage"/>
+      </variables>     
+      <sequence>
+        <bpelx:flowN
+                     N="ora:countNodes('TravelRequest','travelRequest','/client:TravelApproval/airlineData/client:AirlineLink')"
+                     indexVariable="index">
+          <scope name="LocalScopeFlowN">
+           <partnerLinks>
+              <partnerLink myRole="airlineCustomer" name="Airline"
+                 partnerRole="airlineService" partnerLinkType="ns1:flightLT"/>
+          </partnerLinks>
+            <sequence>
+              <assign name="AssignEndpointReference">
+                <copy>
+                  <from expression="bpws:getVariableData('TravelRequest','travelRequest',concat('/client:TravelApproval/airlineData/client:AirlineLink[',bpws:getVariableData('index'),']/ns3:EndpointReference'))"/>
+                  <to partnerLink="Airline"/>
+                </copy>
+              </assign>
+              <invoke name="Airline" inputVariable="FlightDetails"
+                      partnerLink="Airline" portType="ns1:FlightAvailabilityPT"
+                      operation="FlightAvailability"/>
+              <receive name="Airline" createInstance="no"
+                       variable="FlightResponse" partnerLink="Airline"
+                       portType="ns1:FlightCallbackPT"
+                       operation="FlightTicketCallback"/>
+              <assign name="AppendResult">
+                <bpelx:append>
+                  <bpelx:from variable="FlightResponse"
+                              part="confirmationData"/>
+                  <bpelx:to variable="CombinedFlightResponse"
+                            part="confirmationData"/>
+                </bpelx:append>
+              </assign>
+            </sequence>
+          </scope>
+        </bpelx:flowN>
+      </sequence>
+    </scope>
+   
+    <assign name="Initialization">
+      <copy>
+        <from expression="number(0)"/>
+        <to variable="index"/>
+      </copy>
+      <copy>
+        <from expression="ora:getElement('CombinedFlightResponse','confirmationData','/ns1:confirmationData/ns1:confirmationData',number(1))"/>
+        <to variable="TravelResponse" part="confirmationData"/>
+      </copy>
+    </assign>
+   
+    <while name="While_1"
+           condition="bpws:getVariableData('index') &lt; ora:countNodes('TravelRequest','travelRequest','/client:TravelApproval/airlineData/client:AirlineLink')">
+      <sequence name="Sequence_1">
+        <assign name="prepareData">
+          <copy>
+            <from expression="bpws:getVariableData('index') + 1"/>
+            <to variable="index"/>
+          </copy>
+          <copy>
+            <from expression="ora:getElement('CombinedFlightResponse','confirmationData','/ns1:confirmationData/ns1:confirmationData',bpws:getVariableData('index'))"/>
+            <to variable="TempResponse" part="confirmationData"/>
+          </copy>
+        </assign>
+        <switch name="Switch_1">
+          <case condition="bpws:getVariableData('TempResponse','confirmationData','/ns1:confirmationData/Price') &lt; bpws:getVariableData('TravelResponse','confirmationData','/ns1:confirmationData/Price')">
+            <bpelx:annotation>
+              <bpelx:general>
+                <bpelx:property name="userLabel">Cheaper is found</bpelx:property>
+              </bpelx:general>
+            </bpelx:annotation>
+            <assign name="UpdateTravelResponse">
+              <copy>
+                <from variable="TempResponse"/>
+                <to variable="TravelResponse"/>
+              </copy>
+            </assign>
+          </case>
+          <otherwise>
+            <empty/>
+          </otherwise>
+        </switch>
+      </sequence>
+    </while>
+   
+   
+    <invoke name="clientCallBack" inputVariable="TravelResponse"
+            partnerLink="client" portType="client:ClientCallbackPT"
+            operation="ClientCallback"/>
+  </sequence>
+</process>

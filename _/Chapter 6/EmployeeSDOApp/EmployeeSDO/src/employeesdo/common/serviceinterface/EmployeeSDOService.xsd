@@ -1,0 +1,121 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="/employeesdo/common/types/"
+     xmlns:tns="/employeesdo/common/types/" xmlns:ns0="http://xmlns.oracle.com/adf/svc/types/"
+     xmlns:ns1="/employeesdo/common/">
+    <import namespace="/employeesdo/common/" schemaLocation="../EmployeesViewSDO.xsd"/>
+    <import namespace="http://xmlns.oracle.com/adf/svc/types/" schemaLocation="classpath:/META-INF/wsdl/BC4JService.xsd"/>
+    <import namespace="http://xmlns.oracle.com/adf/svc/types/" schemaLocation="classpath:/META-INF/wsdl/BC4JServiceCS.xsd"/>
+    <element name="getEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="employeeId" type="int"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="getEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="createEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="employeesView1" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="createEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="updateEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="employeesView1" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="updateEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="deleteEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="employeesView1" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="deleteEmployeesView1Response">
+        <complexType>
+            <sequence/>
+        </complexType>
+    </element>
+    <element name="mergeEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="employeesView1" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="mergeEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:EmployeesViewSDO"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="findEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="findCriteria" type="ns0:FindCriteria"/>
+                <element name="findControl" type="ns0:FindControl"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="findEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:EmployeesViewSDO" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="processEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="changeOperation" type="string"/>
+                <element name="employeesView1" type="ns1:EmployeesViewSDO" minOccurs="0" maxOccurs="unbounded"/>
+                <element name="processControl" type="ns0:ProcessControl"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="processEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:EmployeesViewSDO" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="processCSEmployeesView1">
+        <complexType>
+            <sequence>
+                <element name="processData" type="ns0:ProcessData"/>
+                <element name="processControl" type="ns0:ProcessControl"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="processCSEmployeesView1Response">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns0:ProcessData"/>
+            </sequence>
+        </complexType>
+    </element>
+</schema>

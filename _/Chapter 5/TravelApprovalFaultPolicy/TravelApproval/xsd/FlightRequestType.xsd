@@ -1,0 +1,12 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xsd:schema targetNamespace="http://packtpub.com/service/airline/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:complexType name="FlightRequestType">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequestNo" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="OriginFrom" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DestinationTo" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DesiredDepartureDate" type="xsd:date"/>
+            <xsd:element minOccurs="0" name="DesiredReturnDate" type="xsd:date"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

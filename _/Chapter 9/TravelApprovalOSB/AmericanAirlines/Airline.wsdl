@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+    
+     targetNamespace="http://packtpub.com/service/airline/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://packtpub.com/service/airline/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    >
+    <types>
+        <xsd:schema targetNamespace="http://packtpub.com/service/airline/types" elementFormDefault="qualified"/>
+        <xsd:schema>
+            <xsd:import schemaLocation="xsd/AirlineTypes.xsd" namespace="http://packtpub.com/service/airline/"/>
+        </xsd:schema>
+    </types>
+    <message name="TravelResponseMessage">
+        <part name="confirmationData" element="tns:confirmationData"/>
+    </message>
+    <message name="ReservationResponseMessage">
+        <part name="reservationData" element="tns:reservationData"/>
+    </message>
+    <message name="FlightTicketRequestMessage">
+        <part name="flightTicketRequest" element="tns:flightTicketRequest"/>
+    </message>
+    <portType name="FlightCallbackPT">
+        <operation name="FlightTicketCallback">
+            <input message="tns:TravelResponseMessage"/>
+        </operation>
+        <operation name="MakeReservationCallback">
+            <input message="tns:ReservationResponseMessage"/>
+        </operation>
+    </portType>
+    <portType name="FlightAvailabilityPT">
+        <operation name="FlightAvailability">
+            <input message="tns:FlightTicketRequestMessage"/>
+        </operation>
+        <operation name="MakeReservation">
+            <input message="tns:TravelResponseMessage"/>
+        </operation>
+    </portType>
+</definitions>

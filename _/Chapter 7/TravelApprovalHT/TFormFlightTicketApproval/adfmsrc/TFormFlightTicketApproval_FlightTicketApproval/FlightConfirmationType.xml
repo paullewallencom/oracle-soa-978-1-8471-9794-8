@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<JavaBean xmlns="http://xmlns.oracle.com/adfm/beanmodel" version="11.1.1.56.60"
+          id="FlightConfirmationType"
+          Package="TFormFlightTicketApproval_FlightTicketApproval"
+          BeanClass="TFormFlightTicketApproval_FlightTicketApproval.FlightConfirmationType"
+          isJavaBased="false">
+  <Attribute Name="FlightNo" IsUpdateable="0" Type="java.lang.String">
+    <Properties>
+      <CustomProperties>
+        <Property Name="nextSiblingNamespace" Value=""/>
+        <Property Name="nextSibling" Value="TravelClass"/>
+        <Property Name="minOccurs" Value="0"/>
+        <Property Name="maxOccurs" Value="1"/>
+        <Property Name="LABEL" Value="Flight No"/>
+        <Property Name="LeafElement_hint" Value="LeafElement_no_attribute"/>
+        <Property Name="nillable" Value="false"/>
+        <Property Name="originalName" Value="FlightNo"/>
+        <Property Name="targetNamespace" Value=""/>
+        <Property Name="type" Value="java.lang.String"/>
+      </CustomProperties>
+    </Properties>
+  </Attribute>
+  <Attribute Name="TravelClass" IsUpdateable="0" Type="java.lang.String">
+    <Properties>
+      <CustomProperties>
+        <Property Name="nextSiblingNamespace" Value=""/>
+        <Property Name="nextSibling" Value="Price"/>
+        <Property Name="minOccurs" Value="0"/>
+        <Property Name="maxOccurs" Value="1"/>
+        <Property Name="LABEL" Value="Travel Class"/>
+        <Property Name="LeafElement_hint" Value="LeafElement_no_attribute"/>
+        <Property Name="nillable" Value="false"/>
+        <Property Name="originalName" Value="TravelClass"/>
+        <Property Name="targetNamespace" Value=""/>
+        <Property Name="type" Value="java.lang.String"/>
+        <Property Name="enumeration" Value="[Economy, Business, First]"/>
+      </CustomProperties>
+    </Properties>
+  </Attribute>
+  <Attribute Name="Price" IsUpdateable="0" Type="java.lang.Float">
+    <Properties>
+      <CustomProperties>
+        <Property Name="nextSiblingNamespace" Value=""/>
+        <Property Name="nextSibling" Value="DepartureDateTime"/>
+        <Property Name="minOccurs" Value="0"/>
+        <Property Name="maxOccurs" Value="1"/>
+        <Property Name="LABEL" Value="Price"/>
+        <Property Name="LeafElement_hint" Value="LeafElement_no_attribute"/>
+        <Property Name="nillable" Value="false"/>
+        <Property Name="originalName" Value="Price"/>
+        <Property Name="targetNamespace" Value=""/>
+        <Property Name="type" Value="java.lang.Float"/>
+      </CustomProperties>
+    </Properties>
+  </Attribute>
+  <Attribute Name="DepartureDateTime" IsUpdateable="0"
+             Type="oracle.bpel.services.datacontrol.types.XSDateTime">
+    <Properties>
+      <CustomProperties>
+        <Property Name="nextSiblingNamespace" Value=""/>
+        <Property Name="nextSibling" Value="ReturnDateTime"/>
+        <Property Name="minOccurs" Value="0"/>
+        <Property Name="maxOccurs" Value="1"/>
+        <Property Name="LABEL" Value="Departure Date Time"/>
+        <Property Name="LeafElement_hint" Value="LeafElement_no_attribute"/>
+        <Property Name="nillable" Value="false"/>
+        <Property Name="originalName" Value="DepartureDateTime"/>
+        <Property Name="targetNamespace" Value=""/>
+        <Property Name="type"
+                  Value="oracle.bpel.services.datacontrol.types.XSDateTime"/>
+      </CustomProperties>
+    </Properties>
+  </Attribute>
+  <Attribute Name="ReturnDateTime" IsUpdateable="0"
+             Type="oracle.bpel.services.datacontrol.types.XSDateTime">
+    <Properties>
+      <CustomProperties>
+        <Property Name="nextSiblingNamespace" Value=""/>
+        <Property Name="nextSibling" Value="Approved"/>
+        <Property Name="minOccurs" Value="0"/>
+        <Property Name="maxOccurs" Value="1"/>
+        <Property Name="LABEL" Value="Return Date Time"/>
+        <Property Name="LeafElement_hint" Value="LeafElement_no_attribute"/>
+        <Property Name="nillable" Value="false"/>
+        <Property Name="originalName" Value="ReturnDateTime"/>
+        <Property Name="targetNamespace" Value=""/>
+        <Property Name="type"
+                  Value="oracle.bpel.services.datacontrol.types.XSDateTime"/>
+      </CustomProperties>
+    </Properties>
+  </Attribute>
+  <Attribute Name="Approved" IsUpdateable="0" Type="java.lang.Boolean">
+    <Properties>
+      <CustomProperties>
+        <Property Name="minOccurs" Value="0"/>
+        <Property Name="maxOccurs" Value="1"/>
+        <Property Name="LABEL" Value="Approved"/>
+        <Property Name="LeafElement_hint" Value="LeafElement_no_attribute"/>
+        <Property Name="nillable" Value="false"/>
+        <Property Name="originalName" Value="Approved"/>
+        <Property Name="targetNamespace" Value=""/>
+        <Property Name="type" Value="java.lang.Boolean"/>
+      </CustomProperties>
+    </Properties>
+  </Attribute>
+</JavaBean>

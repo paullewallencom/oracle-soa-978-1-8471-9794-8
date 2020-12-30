@@ -1,0 +1,507 @@
+<process name="TravelApproval" xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions" xmlns:task="http://xmlns.oracle.com/bpel/workflow/task" targetNamespace="http://xmlns.oracle.com/TravelApproval" xmlns:ui="http://xmlns.oracle.com/soa/designer/" xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc" xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk" xmlns:taskservice="http://xmlns.oracle.com/bpel/workflow/taskService" xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue" xmlns:bpelx="http://schemas.oracle.com/bpel/extension" xmlns:xpath20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:client="http://xmlns.oracle.com/TravelApproval" xmlns:wf="http://schemas.oracle.com/bpel/extension/workflow" xmlns:wfcommon="http://xmlns.oracle.com/bpel/workflow/common" xmlns:ns1="http://packtpub.com/service/employee/" xmlns:ns2="http://packtpub.com/service/airline/" xmlns:ns3="http://packtpub.com/bpel/travel/" xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions" xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator" xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath" xmlns:med="http://schemas.oracle.com/mediator/xpath" xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath" xmlns:bpmn="http://schemas.oracle.com/bpm/xpath">
+   
+   <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+      <bpelx:pattern patternName="bpelx:generated"/>
+      <bpelx:analysis>
+         <bpelx:property name="MainProcessFlag">true</bpelx:property>
+         <bpelx:property name="ProcessType">ASynchronous</bpelx:property>
+         <bpelx:property name="Description"/>
+         <bpelx:property name="LastUpdateDate">7/9/10 3:28:47 PM</bpelx:property>
+         <bpelx:property name="BusinessProcessIdentifier">d562fab0-84f2-11df-4948-000c29b1a451</bpelx:property>
+         <bpelx:property name="SimAttrFlag">false</bpelx:property>
+         <bpelx:property name="BPELProcessIdentifier">d562fab0-84f2-11df-4948-000c29b1a451</bpelx:property>
+      </bpelx:analysis>
+   </bpelx:annotation><partnerLinks>
+      <partnerLink myRole="TravelApprovalProvider" name="travelapproval_client" partnerLinkType="client:TravelApproval" partnerRole="TravelApprovalRequester"/>
+      <partnerLink name="EmployeeTravelStatus" partnerLinkType="ns1:EmployeeTravelStatusPT_PL" partnerRole="EmployeeTravelStatusPT_Role"/>
+      <partnerLink name="Delta_Airlines" partnerLinkType="ns2:flightLT" myRole="airlineCustomer" partnerRole="airlineService"/>
+      <partnerLink name="AmericanAirlines" partnerLinkType="ns2:flightLT" myRole="airlineCustomer" partnerRole="airlineService"/>
+      <partnerLink myRole="TaskServiceCallbackListener" name="Flight_ticket_approval.TaskService_1" partnerRole="TaskService" partnerLinkType="taskservice:TaskService"/>
+   </partnerLinks>
+   <variables>
+      <variable messageType="client:TravelApprovalRequestMessage" name="inputVariable"/>
+      <variable messageType="client:TravelApprovalResponseMessage" name="outputVariable"/>
+      <variable messageType="taskservice:taskMessage" name="Flight_ticket_approval_1_globalVariable"/>
+      <variable name="EmployeeTravelStatusResponse" messageType="ns1:EmployeeTravelStatusResponseMessage"/>
+      <variable name="FlightDetails" messageType="ns2:FlightTicketRequestMessage"/>
+      <variable name="FlightResponseDA" messageType="ns2:TravelResponseMessage"/>
+      <variable name="FlightResponseAA" messageType="ns2:TravelResponseMessage"/>
+      <variable name="FlightResponseBest" element="ns2:confirmationData"/>
+      <variable name="ReservationReponseDA" messageType="ns2:ReservationResponseMessage"/>
+      <variable name="ReservationResponseAA" messageType="ns2:ReservationResponseMessage"/>
+   </variables>
+   
+<sequence name="main">
+      <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+         <bpelx:analysis>
+            <bpelx:property name="BusinessId">Sequence_d562fab0-84f2-11df-4948-000c29b1a451</bpelx:property>
+            <bpelx:property name="LastUpdateDate">7/9/10 3:28:47 PM</bpelx:property>
+         </bpelx:analysis>
+      </bpelx:annotation>
+      
+      <scope name="Receive_travel_request">
+         
+         <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+            <bpelx:pattern patternName="bpelx:StartEvent"/>
+            <bpelx:analysis>
+               <bpelx:property name="BusinessId">Scope_69d341e2-84f9-11df-4948-000c29b1a451</bpelx:property>
+               <bpelx:property name="LastUpdateDate">7/1/10 1:26:51 PM</bpelx:property>
+            </bpelx:analysis>
+         </bpelx:annotation><sequence>
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Sequence_69d341e2-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 1:26:51 PM</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            <receive name="Receive_Receive_travel_request" createInstance="yes" partnerLink="travelapproval_client" portType="client:TravelApproval" operation="process" variable="inputVariable">
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:documentation/>
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Receive_69d341e2-84f9-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 1:26:51 PM</bpelx:property>
+                     <bpelx:property name="Label">Receive_travel_request</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+            </receive>
+         </sequence>
+      </scope>
+      <scope name="Retrieve_employee_travel_status">
+         
+         <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+            <bpelx:pattern patternName="bpelx:automated"/>
+            <bpelx:analysis>
+               <bpelx:property name="LastUpdateDate">7/1/10 3:34:05 PM</bpelx:property>
+               <bpelx:property name="Documentation">This activity has to invoke the EmployeeTravelStatus service, to retrieve the travel status: First, Business, or Economy. </bpelx:property>
+               <bpelx:property name="BusinessId">Scope_69d341e5-84f9-11df-4948-000c29b1a451</bpelx:property>
+            </bpelx:analysis>
+         </bpelx:annotation><variables>
+            <variable name="EmployeeTravelStatusRequest" messageType="ns1:EmployeeTravelStatusRequestMessage"/>
+         </variables>
+         <sequence>
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Sequence_69d341e5-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 3:34:05 PM</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            <assign name="AssignEmployee">
+               <copy>
+                  <from variable="inputVariable" part="payload" query="/ns3:TravelApproval/employee"/>
+                  <to variable="EmployeeTravelStatusRequest" part="employee" query="/ns1:employee"/>
+               </copy>
+            </assign>
+            <invoke name="Invoke_Retrieve_employee_travel_status" partnerLink="EmployeeTravelStatus" inputVariable="EmployeeTravelStatusRequest" outputVariable="EmployeeTravelStatusResponse" portType="ns1:EmployeeTravelStatusPT" operation="EmployeeTravelStatus">
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:documentation/>
+                  <bpelx:analysis>
+                     <bpelx:property name="LastUpdateDate">7/1/10 3:34:05 PM</bpelx:property>
+                     <bpelx:property name="Label">Retrieve_employee_travel_status</bpelx:property>
+                     <bpelx:property name="BusinessId">Invoke_69d341e5-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+            </invoke>
+            <assign name="AssignFlightDetails">
+               <copy>
+                  <from variable="inputVariable" part="payload" query="/ns3:TravelApproval/flightData"/>
+                  <to variable="FlightDetails" part="flightTicketRequest" query="/ns2:flightTicketRequest/ns2:flightData"/>
+               </copy>
+               <copy>
+                  <from variable="EmployeeTravelStatusResponse" part="travelClass" query="/ns1:travelClass"/>
+                  <to variable="FlightDetails" part="flightTicketRequest" query="/ns2:flightTicketRequest/ns2:travelClass"/>
+               </copy>
+            </assign>
+         </sequence>
+      </scope><flow name="_Untitled_">
+         <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+            <bpelx:pattern patternName="Flow"/>
+            <bpelx:analysis>
+               <bpelx:property name="BusinessId">Flow_69d341fc-84f9-11df-4948-000c29b1a451</bpelx:property>
+               <bpelx:property name="LastUpdateDate">7/1/10 4:00:12 PM</bpelx:property>
+               <bpelx:property name="Label">_Untitled_</bpelx:property>
+            </bpelx:analysis>
+         </bpelx:annotation>
+         <sequence>
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Sequence_69d34200-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 4:00:12 PM</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            
+         <scope name="Get_ticket_offer_Delta">
+               
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:pattern patternName="bpelx:automated"/>
+                  <bpelx:analysis>
+                     <bpelx:property name="LastUpdateDate">7/1/10 3:52:52 PM</bpelx:property>
+                     <bpelx:property name="BusinessId">Scope_69d341f0-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation><sequence>
+                  <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                     <bpelx:analysis>
+                        <bpelx:property name="BusinessId">Sequence_69d341f0-84f9-11df-4948-000c29b1a451</bpelx:property>
+                        <bpelx:property name="LastUpdateDate">7/1/10 3:52:52 PM</bpelx:property>
+                     </bpelx:analysis>
+                  </bpelx:annotation>
+                  <invoke name="Invoke_Get_ticket_offer_Delta" partnerLink="Delta_Airlines" inputVariable="FlightDetails" portType="ns2:FlightAvailabilityPT" operation="FlightAvailability">
+                     <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                        <bpelx:documentation/>
+                        <bpelx:analysis>
+                           <bpelx:property name="LastUpdateDate">7/1/10 3:52:52
+                                                                 PM</bpelx:property>
+                           <bpelx:property name="Label">Get_ticket_offer_Delta</bpelx:property>
+                           <bpelx:property name="BusinessId">Invoke_69d341f0-84f9-11df-4948-000c29b1a451</bpelx:property>
+                        </bpelx:analysis>
+                     </bpelx:annotation>
+                  </invoke>
+                  <receive name="Invoke_Get_ticket_offer_Delta_Callback" createInstance="no" variable="FlightResponseDA" partnerLink="Delta_Airlines" portType="ns2:FlightCallbackPT" operation="FlightTicketCallback"/>
+               </sequence>
+            </scope></sequence>
+         <sequence>
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Sequence_69d34201-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 4:00:12 PM</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            
+         <scope name="Get_ticket_offer_American_">
+               
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:pattern patternName="bpelx:automated"/>
+                  <bpelx:analysis>
+                     <bpelx:property name="LastUpdateDate">7/1/10 3:53:22 PM</bpelx:property>
+                     <bpelx:property name="BusinessId">Scope_69d341f6-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation><sequence>
+                  <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                     <bpelx:analysis>
+                        <bpelx:property name="BusinessId">Sequence_69d341f6-84f9-11df-4948-000c29b1a451</bpelx:property>
+                        <bpelx:property name="LastUpdateDate">7/1/10 3:53:22 PM</bpelx:property>
+                     </bpelx:analysis>
+                  </bpelx:annotation>
+                  <invoke name="Invoke_Get_ticket_offer_American_" partnerLink="AmericanAirlines" inputVariable="FlightDetails" portType="ns2:FlightAvailabilityPT" operation="FlightAvailability">
+                     <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                        <bpelx:documentation/>
+                        <bpelx:analysis>
+                           <bpelx:property name="LastUpdateDate">7/1/10 3:53:22
+                                                                 PM</bpelx:property>
+                           <bpelx:property name="Label">Get_ticket_offer_American_</bpelx:property>
+                           <bpelx:property name="BusinessId">Invoke_69d341f6-84f9-11df-4948-000c29b1a451</bpelx:property>
+                        </bpelx:analysis>
+                     </bpelx:annotation>
+                  </invoke>
+                  <receive name="Invoke_Get_ticket_offer_American_American_Callback" createInstance="no" variable="FlightResponseAA" partnerLink="AmericanAirlines" portType="ns2:FlightCallbackPT" operation="FlightTicketCallback"/>
+               </sequence>
+            </scope></sequence>
+      </flow>
+      <switch name="Switch_2">
+      <case condition="number(bpws:getVariableData('FlightResponseAA','confirmationData','/ns2:confirmationData/Price'))&lt;=number(bpws:getVariableData('FlightResponseDA','confirmationData','/ns2:confirmationData/Price'))">
+        <bpelx:annotation>
+          <bpelx:general>
+            <bpelx:property name="userLabel">AA is cheaper</bpelx:property>
+          </bpelx:general>
+        </bpelx:annotation>
+        <assign name="AssignFlightResponseAA">
+               <copy>
+                  <from variable="FlightResponseAA" part="confirmationData"/>
+                  <to variable="FlightResponseBest" query="/ns2:confirmationData"/>
+               </copy>
+            </assign>
+      </case>
+      <otherwise>
+        <assign name="AssignFlightReponseDA">
+               <copy>
+                  <from variable="FlightResponseDA" part="confirmationData"/>
+                  <to variable="FlightResponseBest" query="/ns2:confirmationData"/>
+               </copy>
+            </assign>
+      </otherwise>
+    </switch>
+      <scope name="Flight_ticket_approval_1" xmlns:wf="http://schemas.oracle.com/bpel/extension/workflow" wf:key="Flight_ticket_approval_1_globalVariable">
+         
+         <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+            <bpelx:pattern patternName="bpelx:workflow"/>
+            <bpelx:analysis>
+               <bpelx:property name="Priority">3</bpelx:property>
+               <bpelx:property name="Outcomes">APPROVE,REJECT</bpelx:property>
+               <bpelx:property name="DueDate">1</bpelx:property>
+               <bpelx:property name="LastUpdateDate">7/1/10 6:16:35 PM</bpelx:property>
+               <bpelx:property name="Duration">0002:03:00:00</bpelx:property>
+               <bpelx:property name="Label">Flight_ticket_approval</bpelx:property>
+               <bpelx:property name="BusinessId">69d34207-84f9-11df-4948-000c29b1a451</bpelx:property>
+               <bpelx:property name="WorkflowPattern">SingleApprover-Approval Manager</bpelx:property>
+               <bpelx:property name="Documentation">The Approval Manager has to confirm every ticket before making reservation. He can APPROVE or REJECT the ticket.
+</bpelx:property>
+               <bpelx:property name="Subject">Flight ticket approval</bpelx:property>
+            </bpelx:analysis>
+         </bpelx:annotation><variables xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/">
+            <variable name="initiateTaskInput" messageType="taskservice:initiateTaskMessage"/>
+            <variable name="initiateTaskResponseMessage" messageType="taskservice:initiateTaskResponseMessage"/>
+         </variables>
+         <sequence>
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Sequence_69d34207-84f9-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 6:16:35 PM</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            <assign name="Flight_ticket_approval_1_AssignTaskAttributes">
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Assign1_69d34207-84f9-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 6:16:35 PM</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+               <copy>
+                  <from>
+                     <payload xmlns="http://xmlns.oracle.com/bpel/workflow/task">
+                        <confirmationData xmlns="http://packtpub.com/service/airline/"/>
+                     </payload>
+                  </from>
+                  <to variable="initiateTaskInput" part="payload" query="/taskservice:initiateTask/task:task/task:payload"/>
+               </copy>
+               <copy>
+                  <from expression="number(3)"/>
+                  <to variable="initiateTaskInput" part="payload" query="/taskservice:initiateTask/task:task/task:priority"/>
+               </copy>
+               <copy>
+                  <from variable="FlightResponseBest" query="/ns2:confirmationData"/>
+                  <to variable="initiateTaskInput" part="payload" query="/taskservice:initiateTask/task:task/task:payload/ns2:confirmationData"/>
+               </copy>
+               <copy>
+                  <from expression="string('Flight ticket approval')"/>
+                  <to variable="initiateTaskInput" part="payload" query="/taskservice:initiateTask/task:task/task:title"/>
+               </copy>
+            </assign>
+            <invoke name="initiateTask_Flight_ticket_approval_1" partnerLink="Flight_ticket_approval.TaskService_1" portType="taskservice:TaskService" operation="initiateTask" inputVariable="initiateTaskInput" outputVariable="initiateTaskResponseMessage">
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Invoke_69d34207-84f9-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 6:16:35 PM</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+            </invoke>
+            <receive name="receiveCompletedTask_Flight_ticket_approval_1" partnerLink="Flight_ticket_approval.TaskService_1" portType="taskservice:TaskServiceCallback" operation="onTaskCompleted" variable="Flight_ticket_approval_1_globalVariable" createInstance="no">
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Receive_69d34207-84f9-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 6:16:35 PM</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+            </receive>
+         </sequence>
+      </scope><switch name="Outcome">
+         <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+            <bpelx:pattern patternName="XOR"/>
+            <bpelx:analysis>
+               <bpelx:property name="Label">Outcome</bpelx:property>
+               <bpelx:property name="BusinessId">Switch_25fe64b0-8524-11df-4948-000c29b1a451</bpelx:property>
+               <bpelx:property name="LastUpdateDate">7/1/10 5:24:34 PM</bpelx:property>
+            </bpelx:analysis>
+         </bpelx:annotation>
+         <case condition="bpws:getVariableData('Flight_ticket_approval_1_globalVariable','payload','/task:task/task:systemAttributes/task:outcome')='REJECT'">
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:pattern patternName="Case">Task outcome is REJECT</bpelx:pattern>
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Case_25fe64ce-8524-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 5:24:34 PM</bpelx:property>
+                  <bpelx:property name="ConditionExpression">REJECT</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            <sequence>
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Sequence_25fe64ce-8524-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 5:24:34 PM</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+            <scope name="Scope_1">
+                  <sequence>
+                     <assign name="setOutput">
+                        <copy>
+                           <from expression="false()"/>
+                           <to variable="outputVariable" part="payload" query="/ns2:reservationData/Confirmed"/>
+                        </copy>
+                     </assign>
+                  </sequence>
+               </scope></sequence>
+         </case>
+         <case condition="bpws:getVariableData('Flight_ticket_approval_1_globalVariable','payload','/task:task/task:systemAttributes/task:outcome')='APPROVE'">
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:pattern patternName="Case">Task outcome is APPROVE</bpelx:pattern>
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Case_25fe64c3-8524-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 5:24:34 PM</bpelx:property>
+                  <bpelx:property name="ConditionExpression">APPROVE</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            <sequence>
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Sequence_25fe64c3-8524-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 5:24:34 PM</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+               <switch name="Selected_airline">
+                  <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                     <bpelx:pattern patternName="XOR"/>
+                     <bpelx:analysis>
+                        <bpelx:property name="Label">Selected_airline</bpelx:property>
+                        <bpelx:property name="BusinessId">Switch_25fe64c0-8524-11df-4948-000c29b1a451</bpelx:property>
+                        <bpelx:property name="LastUpdateDate">7/1/10 5:55:40 PM</bpelx:property>
+                     </bpelx:analysis>
+                  </bpelx:annotation>
+                 
+                  <case condition="number(bpws:getVariableData('FlightResponseAA','confirmationData','/ns2:confirmationData/Price'))&lt;=number(bpws:getVariableData('FlightResponseDA','confirmationData','/ns2:confirmationData/Price'))">
+                     <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                        <bpelx:pattern patternName="Case"/>
+                        <bpelx:analysis>
+                           <bpelx:property name="BusinessId">Case_25fe64c5-8524-11df-4948-000c29b1a451</bpelx:property>
+                           <bpelx:property name="LastUpdateDate">7/1/10 5:55:40 PM</bpelx:property>
+                           <bpelx:property name="ConditionExpression">American</bpelx:property>
+                        </bpelx:analysis>
+                     </bpelx:annotation>
+                     <sequence>
+                        <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                           <bpelx:analysis>
+                              <bpelx:property name="BusinessId">Sequence_25fe64c5-8524-11df-4948-000c29b1a451</bpelx:property>
+                              <bpelx:property name="LastUpdateDate">7/1/10 5:55:40 PM</bpelx:property>
+                           </bpelx:analysis>
+                        </bpelx:annotation>
+                        
+                     <scope name="American_reservation">
+                          
+                           <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                              <bpelx:pattern patternName="bpelx:automated"/>
+                              <bpelx:analysis>
+                                 <bpelx:property name="LastUpdateDate">7/1/10 5:32:59 PM</bpelx:property>
+                                 <bpelx:property name="BusinessId">Scope_25fe64ba-8524-11df-4948-000c29b1a451</bpelx:property>
+                              </bpelx:analysis>
+                           </bpelx:annotation><sequence>
+                              <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                                <bpelx:analysis>
+                                    <bpelx:property name="BusinessId">Sequence_25fe64ba-8524-11df-4948-000c29b1a451</bpelx:property>
+                                    <bpelx:property name="LastUpdateDate">7/1/10 5:32:59 PM</bpelx:property>
+                                 </bpelx:analysis>
+                              </bpelx:annotation>
+                              <invoke name="Invoke_American_reservation" partnerLink="AmericanAirlines" portType="ns2:FlightAvailabilityPT" operation="MakeReservation" inputVariable="FlightResponseAA">
+                               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                                    <bpelx:documentation/>
+                                    <bpelx:analysis>
+                                       <bpelx:property name="LastUpdateDate">7/1/10
+                                                                             5:32:59
+                                                                             PM</bpelx:property>
+                                       <bpelx:property name="Label">American_reservation</bpelx:property>
+                                       <bpelx:property name="BusinessId">Invoke_25fe64ba-8524-11df-4948-000c29b1a451</bpelx:property>
+                                    </bpelx:analysis>
+                                 </bpelx:annotation>
+                              </invoke>
+                              <receive name="Invoke_American_reservation_Callback" createInstance="no" variable="ReservationResponseAA" partnerLink="AmericanAirlines" portType="ns2:FlightCallbackPT" operation="MakeReservationCallback"/>
+                              <assign name="SetOutput">
+                                 <copy>
+                                    <from variable="ReservationResponseAA" part="reservationData" query="/ns2:reservationData/Confirmed"/>
+                                    <to variable="outputVariable" part="payload" query="/ns2:reservationData/Confirmed"/>
+                                 </copy>
+                                 <copy>
+                                    <from variable="ReservationResponseAA" part="reservationData" query="/ns2:reservationData/FlightNo"/>
+                                    <to variable="outputVariable" part="payload" query="/ns2:reservationData/FlightNo"/>
+                                 </copy>
+                              </assign>
+                           </sequence>
+                        </scope></sequence>
+                  </case>
+                   <otherwise>
+                     <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                        <bpelx:pattern patternName="Case"/>
+                        <bpelx:analysis>
+                           <bpelx:property name="BusinessId">Case_25fe64c4-8524-11df-4948-000c29b1a451</bpelx:property>
+                           <bpelx:property name="LastUpdateDate">7/1/10 5:55:40 PM</bpelx:property>
+                           <bpelx:property name="ConditionExpression">!American</bpelx:property>
+                        </bpelx:analysis>
+                     </bpelx:annotation>
+                     <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                        <bpelx:pattern/>
+                     </bpelx:annotation>
+                     <sequence>
+                        <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                           <bpelx:analysis>
+                              <bpelx:property name="BusinessId">Sequence_25fe64c4-8524-11df-4948-000c29b1a451</bpelx:property>
+                              <bpelx:property name="LastUpdateDate">7/1/10 5:55:40 PM</bpelx:property>
+                           </bpelx:analysis>
+                        </bpelx:annotation>
+                        
+                     <scope name="Delta_reservation">
+                           
+                           <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                              <bpelx:pattern patternName="bpelx:automated"/>
+                              <bpelx:analysis>
+                                 <bpelx:property name="LastUpdateDate">7/1/10 5:32:34 PM</bpelx:property>
+                                 <bpelx:property name="BusinessId">Scope_25fe64b4-8524-11df-4948-000c29b1a451</bpelx:property>
+                              </bpelx:analysis>
+                           </bpelx:annotation><sequence>
+                              <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                                 <bpelx:analysis>
+                                    <bpelx:property name="BusinessId">Sequence_25fe64b4-8524-11df-4948-000c29b1a451</bpelx:property>
+                                    <bpelx:property name="LastUpdateDate">7/1/10 5:32:34 PM</bpelx:property>
+                                 </bpelx:analysis>
+                              </bpelx:annotation>
+                              <invoke name="Invoke_Delta_reservation" partnerLink="Delta_Airlines" portType="ns2:FlightAvailabilityPT" operation="MakeReservation" inputVariable="FlightResponseDA">
+                                 <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                                    <bpelx:documentation/>
+                                    <bpelx:analysis>
+                                       <bpelx:property name="LastUpdateDate">7/1/10
+                                                                             5:32:34
+                                                                             PM</bpelx:property>
+                                       <bpelx:property name="Label">Delta_reservation</bpelx:property>
+                                       <bpelx:property name="BusinessId">Invoke_25fe64b4-8524-11df-4948-000c29b1a451</bpelx:property>
+                                    </bpelx:analysis>
+                                 </bpelx:annotation>
+                              </invoke>
+                              <receive name="Invoke_Delta_reservation_Callback" createInstance="no" variable="ReservationReponseDA" partnerLink="Delta_Airlines" portType="ns2:FlightCallbackPT" operation="MakeReservationCallback"/>
+                              <assign name="setOutput">
+                                 <copy>
+                                    <from variable="ReservationReponseDA" part="reservationData" query="/ns2:reservationData/Confirmed"/>
+                                    <to variable="outputVariable" part="payload" query="/ns2:reservationData/Confirmed"/>
+                                 </copy>
+                                 <copy>
+                                    <from variable="ReservationReponseDA" part="reservationData" query="/ns2:reservationData/FlightNo"/>
+                                    <to variable="outputVariable" part="payload" query="/ns2:reservationData/FlightNo"/>
+                                 </copy>
+                              </assign>
+                           </sequence>
+                        </scope></sequence>
+                  </otherwise>
+               </switch>
+            </sequence>
+         </case>
+      </switch>
+      
+   <scope name="End_event">
+         
+         <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+            <bpelx:pattern patternName="bpelx:EndEvent"/>
+            <bpelx:analysis>
+               <bpelx:property name="BusinessId">Scope_25fe64d0-8524-11df-4948-000c29b1a451</bpelx:property>
+               <bpelx:property name="LastUpdateDate">7/1/10 6:09:12 PM</bpelx:property>
+            </bpelx:analysis>
+         </bpelx:annotation><sequence>
+            <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+               <bpelx:analysis>
+                  <bpelx:property name="BusinessId">Sequence_25fe64d0-8524-11df-4948-000c29b1a451</bpelx:property>
+                  <bpelx:property name="LastUpdateDate">7/1/10 6:09:12 PM</bpelx:property>
+               </bpelx:analysis>
+            </bpelx:annotation>
+            <invoke name="Invoke_End_event" partnerLink="travelapproval_client" portType="client:TravelApprovalCallback" operation="processResponse" inputVariable="outputVariable">
+               <bpelx:annotation xmlns:bpelx="http://schemas.oracle.com/bpel/extension">
+                  <bpelx:documentation/>
+                  <bpelx:analysis>
+                     <bpelx:property name="BusinessId">Invoke_25fe64d0-8524-11df-4948-000c29b1a451</bpelx:property>
+                     <bpelx:property name="LastUpdateDate">7/1/10 6:09:12 PM</bpelx:property>
+                     <bpelx:property name="Label">End_event</bpelx:property>
+                  </bpelx:analysis>
+               </bpelx:annotation>
+            </invoke>
+         </sequence>
+      </scope></sequence></process>

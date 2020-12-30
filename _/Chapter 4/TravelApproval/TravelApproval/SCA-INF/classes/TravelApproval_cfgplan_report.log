@@ -1,0 +1,47 @@
+Modified Composite [ TravelApproval ]
+	Import Loations
+		No change in old and new value TravelApprovalRef.wsdl 
+		No change in old and new value http://localhost:8001/soa-infra/services/default/AmericanAirlines/AirlineRef.wsdl 
+		No change in old and new value http://localhost:8001/soa-infra/services/default/DeltaAirlines/AirlineRef.wsdl 
+		No change in old and new value EmployeeTravelStatus1.wsdl 
+	Service
+	  Service  [ TravelApprovalService ]
+	    Service Bindings
+	  	Binding  [ ws ]
+	Attribute name=port
+		No change in old and new value http://packtpub.com/bpel/travel/#wsdl.endpoint(TravelApprovalService/TravelApprovalPT_pt) 
+	Reference
+	  Reference  [ EmployeeTravelStatus ]
+	    Reference Bindings
+	  	Binding  [ ws ]
+	Attribute name=port
+		No change in old and new value http://packtpub.com/service/employee/#wsdl.endpoint(EmployeeTravelStatusService/EmployeeTravelStatusPTPort) 
+	Attribute name=location
+		Old [ EmployeeTravelStatus1.wsdl ] 
+		New [ EmployeeTravelStatus.wsdl ] 
+	  Reference  [ AmericanAirlines ]
+	    Reference Bindings
+	  	Binding  [ ws ]
+	    Property [ weblogic.wsee.wsat.transaction.flowOption ]
+		No change in old and new value WSDLDriven 
+	Attribute name=port
+		No change in old and new value http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightAvailabilityPT_pt) 
+	Attribute name=location
+		No change in old and new value http://localhost:8001/soa-infra/services/default/AmericanAirlines/TicketService?WSDL 
+	  	Binding  [ ws ]
+	Attribute name=port
+		No change in old and new value http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightCallbackPT_pt) 
+	  Reference  [ DeltaAirlines ]
+	    Reference Bindings
+	  	Binding  [ ws ]
+	    Property [ weblogic.wsee.wsat.transaction.flowOption ]
+		No change in old and new value WSDLDriven 
+	Attribute name=port
+		No change in old and new value http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightAvailabilityPT_pt) 
+	Attribute name=location
+		No change in old and new value http://localhost:8001/soa-infra/services/default/DeltaAirlines/TicketService?WSDL 
+	  	Binding  [ ws ]
+	Attribute name=port
+		No change in old and new value http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightCallbackPT_pt) 
+---End Match for composite [ TravelApproval ] in config plan---
+Checking for replacement in wsdl and schema files

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAConfigPlan xmlns:jca="http://platform.integration.oracle/blocks/adapter/fw/metadata" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:orawsp="http://schemas.oracle.com/ws/2006/01/policy" xmlns:edl="http://schemas.oracle.com/events/edl" xmlns="http://schemas.oracle.com/soa/configplan">
+   <composite name="TravelApproval">
+      <!--Add search and replace rules for the import section of a composite
+	Example:
+	<searchReplace>
+		<search>http://my-dev-server</search>
+		<replace>http://my-test-server</replace>
+	<searchReplace>
+	<searchReplace>
+		<search>8888</search>
+		<replace>8889</replace>
+	<searchReplace>-->
+      <import>
+         <searchReplace>
+            <search>vmorasoa11gps2</search>
+            <replace>localhost</replace>
+         </searchReplace>
+         <searchReplace>
+            <search>8011</search>
+            <replace>8001</replace>
+         </searchReplace>
+      </import>
+      <service name="TravelApprovalService">
+         <binding type="ws">
+            <attribute name="port">
+               <replace>http://packtpub.com/bpel/travel/#wsdl.endpoint(TravelApprovalService/TravelApprovalPT_pt)</replace>
+            </attribute>
+         </binding>
+      </service>
+      <!--Add search and replace rules for the component properties
+	For components and service/reference bindings, you can add policy references.
+	Example:
+	<component name="*">
+		<wsp:PolicyReference orawsp:category="management" orawsp:status="enabled" URI="oracle/log_policy"/>
+	</component>-->
+      <reference name="EmployeeTravelStatus">
+         <binding type="ws">
+            <attribute name="port">
+               <replace>http://packtpub.com/service/employee/#wsdl.endpoint(EmployeeTravelStatusService/EmployeeTravelStatusPTPort)</replace>
+            </attribute>
+            <attribute name="location">
+               <replace>EmployeeTravelStatus.wsdl</replace>
+            </attribute>
+         </binding>
+      </reference>
+      <reference name="AmericanAirlines">
+         <!--Add search and replace rules for the binding properties-->
+         <binding type="ws">
+            <attribute name="port">
+               <replace>http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightAvailabilityPT_pt)</replace>
+            </attribute>
+            <attribute name="location">
+               <replace>http://localhost:8001/soa-infra/services/default/AmericanAirlines/TicketService?WSDL</replace>
+            </attribute>
+            <property name="weblogic.wsee.wsat.transaction.flowOption">
+               <replace>WSDLDriven</replace>
+            </property>
+         </binding>
+         <callback>
+            <binding type="ws">
+               <attribute name="port">
+                  <replace>http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightCallbackPT_pt)</replace>
+               </attribute>
+            </binding>
+         </callback>
+      </reference>
+      <reference name="DeltaAirlines">
+         <!--Add search and replace rules for the binding properties-->
+         <binding type="ws">
+            <attribute name="port">
+               <replace>http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightAvailabilityPT_pt)</replace>
+            </attribute>
+            <attribute name="location">
+               <replace>http://localhost:8001/soa-infra/services/default/DeltaAirlines/TicketService?WSDL</replace>
+            </attribute>
+            <property name="weblogic.wsee.wsat.transaction.flowOption">
+               <replace>WSDLDriven</replace>
+            </property>
+         </binding>
+         <callback>
+            <binding type="ws">
+               <attribute name="port">
+                  <replace>http://packtpub.com/service/airline/#wsdl.endpoint(TicketService/FlightCallbackPT_pt)</replace>
+               </attribute>
+            </binding>
+         </callback>
+      </reference>
+   </composite>
+   <!--To configure monitor.config: 
+	<property name="enabled"><replace>true</replace></property>
+	<property name="dataObjectsFolder"><searchReplace><search>mydev</search><replace>myproduction</replace></searchReplace></property>
+	
+	sample properties to configure for adapter: 
+	<jca:property name="QueueName"><replace>medmq1</replace></jca:property>
+	
+	To add search and replace rules for wsdls, xsd and jca files
+	Example:
+	<searchReplace>
+		<search>http://my-dev-server</search>
+		<replace>http://my-test-server</replace>
+	<searchReplace>
+	<searchReplace>
+		<search>8888</search>
+		<replace>8889</replace>
+	<searchReplace>
+	-->
+   <wsdlAndSchema name="Airline.wsdl|EmployeeTravelStatus.wsdl|TravelApproval.wsdl|TravelApprovalRef.wsdl|xsd/AirlineTypes.xsd|xsd/EmployeeType.xsd|xsd/FlightConfirmationType.xsd|xsd/FlightRequestType.xsd|xsd/FlightReservationType.xsd|xsd/TravelClassType.xsd|xsd/TravelRequestType.xsd">
+      <searchReplace>
+            <search>vmorasoa11gps2</search>
+            <replace>localhost</replace>
+         </searchReplace>
+         <searchReplace>
+            <search>8011</search>
+            <replace>8001</replace>
+         </searchReplace>
+   </wsdlAndSchema>
+</SOAConfigPlan>
